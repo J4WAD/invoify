@@ -86,7 +86,7 @@ export async function GET(req: NextRequest) {
     ];
     const csv = [
         header.join(","),
-        ...rows.map((r) =>
+        ...rows.map((r: any) =>
             [
                 r.number,
                 r.documentType,
