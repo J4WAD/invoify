@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p /Users/airm1/Documents/invoify/.husky)",
+      "Bash(cat)",
+      "Bash(chmod +x /Users/airm1/Documents/invoify/.husky/pre-commit)"
+    ]
+  }
+}

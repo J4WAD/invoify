@@ -3,18 +3,28 @@ import { NextResponse } from "next/server";
 
 // Utils
 import numberToWords from "number-to-words";
+import { amountToWordsDZD, amountToWordsFR } from "@/lib/invoice/amountToWords";
 
 // Currencies
 import currenciesDetails from "@/public/assets/data/currencies.json";
 import { CurrencyDetails } from "@/types";
 
 /**
- * Formats a number with commas and decimal places
+ * Formats a number with commas and decimal places.
+ * Uses space-separated thousands for DZD (Algerian Dinar).
  *
  * @param {number} number - Number to format
+ * @param {string} [currency] - Optional currency code for locale-aware formatting
  * @returns {string} A styled number to be displayed on the invoice
  */
-const formatNumberWithCommas = (number: number) => {
+const formatNumberWithCommas = (number: number, currency?: string) => {
+    if (currency === "DZD") {
+        return new Intl.NumberFormat("fr-DZ", {
+            style: "decimal",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        }).format(number);
+    }
     return number.toLocaleString("en-US", {
         style: "decimal",
         minimumFractionDigits: 2,
@@ -47,6 +57,9 @@ const formatNumberWithCommas = (number: number) => {
  * @returns {string} Number in words
  */
 const formatPriceToString = (price: number, currency: string): string => {
+    // Use French fiscal wording for DZD
+    if (currency === "DZD") return amountToWordsDZD(price);
+
     // Initialize variables
     let decimals : number;
     let beforeDecimal: string | null = null;

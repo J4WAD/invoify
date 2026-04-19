@@ -12,14 +12,24 @@ import { InvoiceActions, InvoiceForm } from "@/app/components";
 // Context
 import { useInvoiceContext } from "@/contexts/InvoiceContext";
 
+// Hooks
+import useKeyboardShortcuts from "@/hooks/useKeyboardShortcuts";
+
 // Types
 import { InvoiceType } from "@/types";
 
 const InvoiceMain = () => {
-    const { handleSubmit } = useFormContext<InvoiceType>();
+    const { handleSubmit, getValues } = useFormContext<InvoiceType>();
 
     // Get the needed values from invoice context
-    const { onFormSubmit } = useInvoiceContext();
+    const { onFormSubmit, saveInvoice, newInvoice } = useInvoiceContext();
+
+    // Keyboard shortcuts: Ctrl+S save, Ctrl+G generate, Ctrl+J new
+    useKeyboardShortcuts({
+        onSave: saveInvoice,
+        onGenerate: () => onFormSubmit(getValues()),
+        onNewInvoice: newInvoice,
+    });
 
     return (
         <>

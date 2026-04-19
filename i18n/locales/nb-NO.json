@@ -1,93 +1,168 @@
 {
-    "form": {
-        "title": "Faktura",
-        "description": "Generer faktura",
-        "newInvBadge": "Ny faktura",
-        "wizard": {
-            "fromAndTo": "Fra & til",
-            "invoiceDetails": "Fakturadetaljer",
-            "lineItems": "Varelinjer",
-            "paymentInfo": "Betalingsinformasjon",
-            "summary": "Sammendrag",
-            "next": "Neste",
-            "back": "Tilbake"
+  "documentType": {
+    "selectType": "Dokumenttype",
+    "facture": "Faktura",
+    "devis": "Tilbud",
+    "bon_de_livraison": "Følgeseddel",
+    "avoir": "Kreditnota",
+    "bon_de_commande": "Bestilling",
+    "pro_forma": "Pro forma",
+    "bon_de_reception": "Mottakskvittering"
+  },
+  "form": {
+    "title": "Faktura",
+    "description": "Generer faktura",
+    "newInvBadge": "Ny faktura",
+    "wizard": {
+      "fromAndTo": "Fra & til",
+      "invoiceDetails": "Fakturadetaljer",
+      "lineItems": "Varelinjer",
+      "paymentInfo": "Betalingsinformasjon",
+      "summary": "Sammendrag",
+      "next": "Neste",
+      "back": "Tilbake"
+    },
+    "steps": {
+      "fromAndTo": {
+        "billFrom": "Faktura fra",
+        "billTo": "Faktura til",
+        "name": "Navn",
+        "address": "Adresse",
+        "zipCode": "Postnummer",
+        "city": "By",
+        "country": "Land",
+        "email": "E-post",
+        "phone": "Telefon",
+        "nif": "NIF",
+        "rc": "RC",
+        "ai": "Skatteartikkel",
+        "nis": "NIS",
+        "addCustomInput": "Legg til egendefinert felt",
+        "sender": "Avsender",
+        "receiver": "Mottaker",
+        "complianceWarning": "Manglende skatte-ID-er for samsvar:"
+      },
+      "invoiceDetails": {
+        "heading": "Fakturadetaljer",
+        "invoiceLogo": {
+          "label": "Fakturalogo",
+          "placeholder": "Klikk for å laste opp bilde"
         },
-        "steps": {
-            "fromAndTo": {
-                "billFrom": "Faktura fra",
-                "billTo": "Faktura til",
-                "name": "Navn",
-                "address": "Adresse",
-                "zipCode": "Postnummer",
-                "city": "By",
-                "country": "Land",
-                "email": "E-post",
-                "phone": "Telefon",
-                "addCustomInput": "Legg til egendefinert felt",
-                "sender": "Avsender",
-                "receiver": "Mottaker"
-            },
-            "invoiceDetails": {
-                "heading": "Fakturadetaljer",
-                "invoiceLogo": {
-                    "label": "Fakturalogo",
-                    "placeholder": "Klikk for å laste opp bilde"
-                },
-                "invoiceNumber": "Fakturanummer",
-                "issuedDate": "Utstedelsesdato",
-                "dueDate": "Forfallsdato",
-                "currency": "Valuta"
-            },
-            "lineItems": {
-                "heading": "Varer",
-                "item": "Vare",
-                "name": "Navn",
-                "quantity": "Antall",
-                "rate": "Pris",
-                "total": "Totalt",
-                "description": "Beskrivelse",
-                "addNewItem": "Legg til ny vare",
-                "removeItem": "Fjern vare"
-            },
-            "paymentInfo": {
-                "heading": "Betalingsinformasjon",
-                "bankName": "Banknavn",
-                "accountName": "Kontonavn",
-                "accountNumber": "Kontonummer"
-            },
-            "summary": {
-                "heading": "Sammendrag",
-                "signature": {
-                    "heading": "Signatur",
-                    "placeholder": "Klikk for å legge til signatur",
-                    "description": "Velg en metode for å legge til signaturen din på fakturaen",
-                    "draw": "Tegn",
-                    "type": "Skriv",
-                    "upload": "Last opp"
-                },
-                "additionalNotes": "Tilleggsnotater",
-                "paymentTerms": "Betalingsbetingelser",
-                "discount": "Rabatt",
-                "tax": "MVA",
-                "shipping": "Frakt",
-                "subTotal": "Delsum",
-                "totalAmount": "Totalbeløp",
-                "includeTotalInWords": "Inkluder totalbeløp med ord?",
-                "yes": "Ja",
-                "no": "Nei"
-            }
+        "invoiceNumber": "Fakturanummer",
+        "issuedDate": "Utstedelsesdato",
+        "dueDate": "Forfallsdato",
+        "currency": "Valuta",
+        "brandColor": "Merkevarefarge",
+        "devisValidity": "Tilbudets gyldighet",
+        "taxRegime": {
+          "label": "Skatteordning",
+          "ASSUJETTI_TVA": "MVA-registrert",
+          "DISPENSE_IFU": "IFU-fritatt (Art. 282 ter)",
+          "EXONERE": "Fritatt for MVA"
         }
-    },
-    "actions": {
-        "title": "Handlinger",
-        "description": "Operasjoner og forhåndsvisning",
-        "loadInvoice": "Last inn faktura",
-        "exportInvoice": "Eksporter faktura",
-        "newInvoice": "Ny faktura",
-        "generatePdf": "Generer PDF",
-        "pdfView": "PDF-visning"
-    },
-    "footer": {
-        "developedBy": "Utviklet av"
+      },
+      "lineItems": {
+        "heading": "Varer",
+        "item": "Vare",
+        "name": "Navn",
+        "quantity": "Antall",
+        "rate": "Pris",
+        "total": "Totalt",
+        "description": "Beskrivelse",
+        "addNewItem": "Legg til ny vare",
+        "removeItem": "Fjern vare"
+      },
+      "paymentInfo": {
+        "heading": "Betalingsinformasjon",
+        "bankName": "Banknavn",
+        "accountName": "Kontonavn",
+        "accountNumber": "Kontonummer"
+      },
+      "summary": {
+        "heading": "Sammendrag",
+        "signature": {
+          "heading": "Signatur",
+          "placeholder": "Klikk for å legge til signatur",
+          "description": "Velg en metode for å legge til signaturen din på fakturaen",
+          "draw": "Tegn",
+          "type": "Skriv",
+          "upload": "Last opp"
+        },
+        "additionalNotes": "Tilleggsnotater",
+        "paymentTerms": "Betalingsbetingelser",
+        "discount": "Rabatt",
+        "tax": "MVA",
+        "shipping": "Frakt",
+        "subTotal": "Delsum",
+        "totalAmount": "Totalbeløp",
+        "includeTotalInWords": "Inkluder totalbeløp med ord?",
+        "yes": "Ja",
+        "no": "Nei"
+      }
     }
+  },
+  "actions": {
+    "title": "Handlinger",
+    "description": "Operasjoner og forhåndsvisning",
+    "loadInvoice": "Last inn faktura",
+    "exportInvoice": "Eksporter faktura",
+    "newInvoice": "Ny faktura",
+    "generatePdf": "Generer PDF",
+    "pdfView": "PDF-visning"
+  },
+  "footer": {
+    "developedBy": "Utviklet av"
+  },
+  "languageSelector": {
+    "placeholder": "Velg et språk",
+    "title": "Språk"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Configure your profile and invoicing preferences",
+    "save": "Save",
+    "reset": "Reset",
+    "businessInfo": {
+      "title": "Business",
+      "description": "Your company details used as the default sender",
+      "saved": "Business info saved"
+    },
+    "branding": {
+      "title": "Branding",
+      "description": "Customize your invoice appearance",
+      "logo": "Company Logo",
+      "watermark": "Watermark Logo",
+      "brandColor": "Brand Color",
+      "defaultTemplate": "Default Template",
+      "saved": "Branding saved"
+    },
+    "invoiceDefaults": {
+      "title": "Defaults",
+      "description": "Default values for new invoices",
+      "currency": "Default Currency",
+      "language": "Default Language",
+      "numbering": "Numbering",
+      "invoicePrefix": "Invoice Prefix",
+      "nextNumber": "Next Number",
+      "preview": "Preview",
+      "defaultCharges": "Default Charges",
+      "taxRate": "Default Tax Rate",
+      "taxID": "Tax ID",
+      "paymentTerms": "Default Payment Terms",
+      "additionalNotes": "Default Additional Notes",
+      "saved": "Invoice defaults saved"
+    },
+    "paymentInfo": {
+      "title": "Payment",
+      "description": "Default payment details for your invoices",
+      "saved": "Payment info saved"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "ytdRevenue": "Year-to-date revenue",
+    "unpaid": "Unpaid",
+    "overdue": "Overdue",
+    "recentInvoices": "Recent invoices"
+  }
 }

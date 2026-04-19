@@ -1,4 +1,14 @@
 {
+  "documentType": {
+    "selectType": "Jenis dokumen",
+    "facture": "Faktur",
+    "devis": "Penawaran",
+    "bon_de_livraison": "Surat jalan",
+    "avoir": "Nota kredit",
+    "bon_de_commande": "Pesanan",
+    "pro_forma": "Pro forma",
+    "bon_de_reception": "Tanda terima"
+  },
   "form": {
     "title": "Faktur",
     "description": "Buat Faktur",
@@ -23,9 +33,14 @@
         "country": "Negara",
         "email": "Email",
         "phone": "Telepon",
+        "nif": "NIF",
+        "rc": "RC",
+        "ai": "Pasal pajak",
+        "nis": "NIS",
         "addCustomInput": "Tambah Input Kustom",
         "sender": "Pengirim",
-        "receiver": "Penerima"
+        "receiver": "Penerima",
+        "complianceWarning": "ID pajak yang hilang untuk kepatuhan:"
       },
       "invoiceDetails": {
         "heading": "Detail Faktur",
@@ -36,7 +51,15 @@
         "invoiceNumber": "Nomor Faktur",
         "issuedDate": "Tanggal Terbit",
         "dueDate": "Jatuh Tempo",
-        "currency": "Mata Uang"
+        "currency": "Mata Uang",
+        "brandColor": "Warna merek",
+        "devisValidity": "Masa berlaku penawaran",
+        "taxRegime": {
+          "label": "Rezim pajak",
+          "ASSUJETTI_TVA": "Terdaftar PPN",
+          "DISPENSE_IFU": "Bebas IFU (Ps. 282 ter)",
+          "EXONERE": "Bebas PPN"
+        }
       },
       "lineItems": {
         "heading": "Item",
@@ -89,5 +112,57 @@
   },
   "footer": {
     "developedBy": "Dikembangkan oleh"
+  },
+  "languageSelector": {
+    "placeholder": "Pilih bahasa",
+    "title": "Bahasa"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Configure your profile and invoicing preferences",
+    "save": "Save",
+    "reset": "Reset",
+    "businessInfo": {
+      "title": "Business",
+      "description": "Your company details used as the default sender",
+      "saved": "Business info saved"
+    },
+    "branding": {
+      "title": "Branding",
+      "description": "Customize your invoice appearance",
+      "logo": "Company Logo",
+      "watermark": "Watermark Logo",
+      "brandColor": "Brand Color",
+      "defaultTemplate": "Default Template",
+      "saved": "Branding saved"
+    },
+    "invoiceDefaults": {
+      "title": "Defaults",
+      "description": "Default values for new invoices",
+      "currency": "Default Currency",
+      "language": "Default Language",
+      "numbering": "Numbering",
+      "invoicePrefix": "Invoice Prefix",
+      "nextNumber": "Next Number",
+      "preview": "Preview",
+      "defaultCharges": "Default Charges",
+      "taxRate": "Default Tax Rate",
+      "taxID": "Tax ID",
+      "paymentTerms": "Default Payment Terms",
+      "additionalNotes": "Default Additional Notes",
+      "saved": "Invoice defaults saved"
+    },
+    "paymentInfo": {
+      "title": "Payment",
+      "description": "Default payment details for your invoices",
+      "saved": "Payment info saved"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "ytdRevenue": "Year-to-date revenue",
+    "unpaid": "Unpaid",
+    "overdue": "Overdue",
+    "recentInvoices": "Recent invoices"
   }
 }

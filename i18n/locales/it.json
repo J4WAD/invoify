@@ -1,93 +1,168 @@
 {
-    "form": {
-        "title": "Fattura",
-        "description": "Genera Fattura",
-        "newInvBadge": "Nuova Fattura",
-        "wizard": {
-            "fromAndTo": "Da & A",
-            "invoiceDetails": "Dettagli Fattura",
-            "lineItems": "Elementi Linea",
-            "paymentInfo": "Informazioni Pagamento",
-            "summary": "Riassunto",
-            "next": "Avanti",
-            "back": "Indietro"
+  "documentType": {
+    "selectType": "Tipo documento",
+    "facture": "Fattura",
+    "devis": "Preventivo",
+    "bon_de_livraison": "Bolla di consegna",
+    "avoir": "Nota di credito",
+    "bon_de_commande": "Ordine",
+    "pro_forma": "Pro forma",
+    "bon_de_reception": "Ricevuta di ricezione"
+  },
+  "form": {
+    "title": "Fattura",
+    "description": "Genera Fattura",
+    "newInvBadge": "Nuova Fattura",
+    "wizard": {
+      "fromAndTo": "Da & A",
+      "invoiceDetails": "Dettagli Fattura",
+      "lineItems": "Elementi Linea",
+      "paymentInfo": "Informazioni Pagamento",
+      "summary": "Riassunto",
+      "next": "Avanti",
+      "back": "Indietro"
+    },
+    "steps": {
+      "fromAndTo": {
+        "billFrom": "Fattura Da",
+        "billTo": "Fattura A",
+        "name": "Nome",
+        "address": "Indirizzo",
+        "zipCode": "CAP",
+        "city": "Città",
+        "country": "Paese",
+        "email": "Email",
+        "phone": "Telefono",
+        "nif": "NIF",
+        "rc": "RC",
+        "ai": "Articolo d'imposta",
+        "nis": "NIS",
+        "addCustomInput": "Aggiungi Campo Custom",
+        "sender": "Mittente",
+        "receiver": "Destinatario",
+        "complianceWarning": "ID fiscali mancanti per la conformità:"
+      },
+      "invoiceDetails": {
+        "heading": "Dettagli Fattura",
+        "invoiceLogo": {
+          "label": "Logo Fattura",
+          "placeholder": "Fare clic per caricare un'immagine"
         },
-        "steps": {
-            "fromAndTo": {
-                "billFrom": "Fattura Da",
-                "billTo": "Fattura A",
-                "name": "Nome",
-                "address": "Indirizzo",
-                "zipCode": "CAP",
-                "city": "Città",
-                "country": "Paese",
-                "email": "Email",
-                "phone": "Telefono",
-                "addCustomInput": "Aggiungi Campo Custom",
-                "sender": "Mittente",
-                "receiver": "Destinatario"
-            },
-            "invoiceDetails": {
-                "heading": "Dettagli Fattura",
-                "invoiceLogo": {
-                    "label": "Logo Fattura",
-                    "placeholder": "Fare clic per caricare un'immagine"
-                },
-                "invoiceNumber": "Numero Fattura",
-                "issuedDate": "Data di emissione",
-                "dueDate": "Data di scadenza",
-                "currency": "Valuta"
-            },
-            "lineItems": {
-                "heading": "Elementi",
-                "item": "Elemento",
-                "name": "Nome",
-                "quantity": "Quantità",
-                "rate": "Tasso",
-                "total": "Totale",
-                "description": "Descrizione",
-                "addNewItem": "Aggiungi nuovo elemento",
-                "removeItem": "Rimuovi Elemento"
-            },
-            "paymentInfo": {
-                "heading": "Informazioni sul pagamento",
-                "bankName": "Nome della banca",
-                "accountName": "Intestatario del conto",
-                "accountNumber": "Numero Conto"
-            },
-            "summary": {
-                "heading": "Sintesi",
-                "signature": {
-                    "heading": "Firma",
-                    "placeholder": "Fare clic per aggiungere la firma",
-                    "description": "Scegli un metodo per aggiungere la tua firma alla fattura",
-                    "draw": "Disegno",
-                    "type": "Digita",
-                    "upload": "Carica"
-                },
-                "additionalNotes": "Note aggiuntive",
-                "paymentTerms": "Termini di pagamento",
-                "discount": "Sconto",
-                "tax": "Imposte (IVA)",
-                "shipping": "Spedizione",
-                "subTotal": "Imponibile",
-                "totalAmount": "Importo totale",
-                "includeTotalInWords": "Includere il totale in parole?",
-                "yes": "Si",
-                "no": "No"
-            }
+        "invoiceNumber": "Numero Fattura",
+        "issuedDate": "Data di emissione",
+        "dueDate": "Data di scadenza",
+        "currency": "Valuta",
+        "brandColor": "Colore del marchio",
+        "devisValidity": "Validità dell'offerta",
+        "taxRegime": {
+          "label": "Regime fiscale",
+          "ASSUJETTI_TVA": "Soggetto IVA",
+          "DISPENSE_IFU": "Esente IFU (Art. 282 ter)",
+          "EXONERE": "Esente IVA"
         }
-    },
-    "actions": {
-        "title": "Azioni",
-        "description": "Operazioni e anteprima",
-        "loadInvoice": "Caricare la fattura",
-        "exportInvoice": "Esportazione della fattura",
-        "newInvoice": "Nuova fattura",
-        "generatePdf": "Generare PDF",
-        "pdfView": "Vista in PDF"
-    },
-    "footer": {
-        "developedBy": "Sviluppato da"
+      },
+      "lineItems": {
+        "heading": "Elementi",
+        "item": "Elemento",
+        "name": "Nome",
+        "quantity": "Quantità",
+        "rate": "Tasso",
+        "total": "Totale",
+        "description": "Descrizione",
+        "addNewItem": "Aggiungi nuovo elemento",
+        "removeItem": "Rimuovi Elemento"
+      },
+      "paymentInfo": {
+        "heading": "Informazioni sul pagamento",
+        "bankName": "Nome della banca",
+        "accountName": "Intestatario del conto",
+        "accountNumber": "Numero Conto"
+      },
+      "summary": {
+        "heading": "Sintesi",
+        "signature": {
+          "heading": "Firma",
+          "placeholder": "Fare clic per aggiungere la firma",
+          "description": "Scegli un metodo per aggiungere la tua firma alla fattura",
+          "draw": "Disegno",
+          "type": "Digita",
+          "upload": "Carica"
+        },
+        "additionalNotes": "Note aggiuntive",
+        "paymentTerms": "Termini di pagamento",
+        "discount": "Sconto",
+        "tax": "Imposte (IVA)",
+        "shipping": "Spedizione",
+        "subTotal": "Imponibile",
+        "totalAmount": "Importo totale",
+        "includeTotalInWords": "Includere il totale in parole?",
+        "yes": "Si",
+        "no": "No"
+      }
     }
+  },
+  "actions": {
+    "title": "Azioni",
+    "description": "Operazioni e anteprima",
+    "loadInvoice": "Caricare la fattura",
+    "exportInvoice": "Esportazione della fattura",
+    "newInvoice": "Nuova fattura",
+    "generatePdf": "Generare PDF",
+    "pdfView": "Vista in PDF"
+  },
+  "footer": {
+    "developedBy": "Sviluppato da"
+  },
+  "languageSelector": {
+    "placeholder": "Seleziona una lingua",
+    "title": "Lingue"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Configure your profile and invoicing preferences",
+    "save": "Save",
+    "reset": "Reset",
+    "businessInfo": {
+      "title": "Business",
+      "description": "Your company details used as the default sender",
+      "saved": "Business info saved"
+    },
+    "branding": {
+      "title": "Branding",
+      "description": "Customize your invoice appearance",
+      "logo": "Company Logo",
+      "watermark": "Watermark Logo",
+      "brandColor": "Brand Color",
+      "defaultTemplate": "Default Template",
+      "saved": "Branding saved"
+    },
+    "invoiceDefaults": {
+      "title": "Defaults",
+      "description": "Default values for new invoices",
+      "currency": "Default Currency",
+      "language": "Default Language",
+      "numbering": "Numbering",
+      "invoicePrefix": "Invoice Prefix",
+      "nextNumber": "Next Number",
+      "preview": "Preview",
+      "defaultCharges": "Default Charges",
+      "taxRate": "Default Tax Rate",
+      "taxID": "Tax ID",
+      "paymentTerms": "Default Payment Terms",
+      "additionalNotes": "Default Additional Notes",
+      "saved": "Invoice defaults saved"
+    },
+    "paymentInfo": {
+      "title": "Payment",
+      "description": "Default payment details for your invoices",
+      "saved": "Payment info saved"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "ytdRevenue": "Year-to-date revenue",
+    "unpaid": "Unpaid",
+    "overdue": "Overdue",
+    "recentInvoices": "Recent invoices"
+  }
 }

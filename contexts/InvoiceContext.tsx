@@ -17,6 +17,9 @@ import { useFormContext } from "react-hook-form";
 // Hooks
 import useToasts from "@/hooks/useToasts";
 
+// Profile
+import { useProfileContext } from "@/contexts/ProfileContext";
+
 // Services
 import { exportInvoice } from "@/services/invoice/client/exportInvoice";
 
@@ -27,6 +30,8 @@ import {
   SEND_PDF_API,
   SHORT_DATE_OPTIONS,
   LOCAL_STORAGE_INVOICE_DRAFT_KEY,
+  LOCAL_STORAGE_SAVED_INVOICES_KEY,
+  LEGACY_LOCAL_STORAGE_SAVED_INVOICES_KEY,
 } from "@/lib/variables";
 
 // Types
@@ -46,6 +51,8 @@ const defaultInvoiceContext = {
   previewPdfInTab: () => {},
   saveInvoice: () => {},
   deleteInvoice: (index: number) => {},
+  updateInvoiceStatus: (invoiceNumber: string, status: InvoiceType["details"]["status"]) => {},
+  duplicateInvoice: (invoice: InvoiceType) => {},
   sendPdfToMail: (email: string): Promise<void> => Promise.resolve(),
   exportInvoiceAs: (exportAs: ExportTypes) => {},
   importInvoice: (file: File) => {},
@@ -80,6 +87,9 @@ export const InvoiceContextProvider = ({
   // Get form values and methods from form context
   const { getValues, reset, watch } = useFormContext<InvoiceType>();
 
+  // Profile context for auto-fill and auto-increment
+  const { profile, getNextInvoiceNumber, incrementInvoiceNumber } = useProfileContext();
+
   // Variables
   const [invoicePdf, setInvoicePdf] = useState<Blob>(new Blob());
   const [invoicePdfLoading, setInvoicePdfLoading] = useState<boolean>(false);
@@ -88,15 +98,24 @@ export const InvoiceContextProvider = ({
   const [savedInvoices, setSavedInvoices] = useState<InvoiceType[]>([]);
 
   useEffect(() => {
-    let savedInvoicesDefault;
-    if (typeof window !== undefined) {
-      // Saved invoices variables
-      const savedInvoicesJSON = window.localStorage.getItem("savedInvoices");
-      savedInvoicesDefault = savedInvoicesJSON
-        ? JSON.parse(savedInvoicesJSON)
-        : [];
-      setSavedInvoices(savedInvoicesDefault);
+    if (typeof window === "undefined") return;
+
+    // One-time migration of the legacy key to the namespaced key
+    const legacyData = window.localStorage.getItem(
+      LEGACY_LOCAL_STORAGE_SAVED_INVOICES_KEY
+    );
+    const currentData = window.localStorage.getItem(
+      LOCAL_STORAGE_SAVED_INVOICES_KEY
+    );
+    if (legacyData && !currentData) {
+      window.localStorage.setItem(LOCAL_STORAGE_SAVED_INVOICES_KEY, legacyData);
+      window.localStorage.removeItem(LEGACY_LOCAL_STORAGE_SAVED_INVOICES_KEY);
     }
+
+    const savedInvoicesJSON = window.localStorage.getItem(
+      LOCAL_STORAGE_SAVED_INVOICES_KEY
+    );
+    setSavedInvoices(savedInvoicesJSON ? JSON.parse(savedInvoicesJSON) : []);
   }, []);
 
   // Persist full form state with debounce
@@ -135,10 +154,67 @@ export const InvoiceContextProvider = ({
   };
 
   /**
-   * Generates a new invoice.
+   * Generates a new invoice, auto-filling from the saved profile.
    */
   const newInvoice = () => {
-    reset(FORM_DEFAULT_VALUES);
+    const { businessInfo, branding, invoiceDefaults, paymentInfo } = profile;
+
+    const hasBusinessInfo = businessInfo.name.length > 0;
+    const hasPaymentInfo = paymentInfo.bankName.length > 0;
+
+    const profileDefaults = {
+      ...FORM_DEFAULT_VALUES,
+      sender: hasBusinessInfo
+        ? {
+            name: businessInfo.name,
+            address: businessInfo.address,
+            zipCode: businessInfo.zipCode,
+            city: businessInfo.city,
+            country: businessInfo.country,
+            email: businessInfo.email,
+            phone: businessInfo.phone,
+            customInputs: businessInfo.customInputs,
+            nif: businessInfo.nif || "",
+            rc: businessInfo.rc || "",
+            ai: businessInfo.ai || "",
+            nis: businessInfo.nis || "",
+          }
+        : FORM_DEFAULT_VALUES.sender,
+      details: {
+        ...FORM_DEFAULT_VALUES.details,
+        invoiceLogo: branding.logo || "",
+        brandColor: branding.brandColor || "#2563eb",
+        watermarkImage: branding.watermarkLogo || "",
+        pdfTemplate: branding.defaultTemplate || 1,
+        invoiceNumber: getNextInvoiceNumber(),
+        currency: invoiceDefaults.currency || "DZD",
+        language: invoiceDefaults.language || "French",
+        paymentTerms: invoiceDefaults.defaultPaymentTerms || "",
+        additionalNotes: invoiceDefaults.defaultAdditionalNotes || "",
+        taxDetails: {
+          amount: invoiceDefaults.defaultTaxRate,
+          amountType: invoiceDefaults.defaultTaxType,
+          taxID: invoiceDefaults.defaultTaxID,
+        },
+        discountDetails: {
+          amount: invoiceDefaults.defaultDiscountRate,
+          amountType: invoiceDefaults.defaultDiscountType,
+        },
+        shippingDetails: {
+          cost: invoiceDefaults.defaultShippingCost,
+          costType: invoiceDefaults.defaultShippingType,
+        },
+        paymentInformation: hasPaymentInfo
+          ? {
+              bankName: paymentInfo.bankName,
+              accountName: paymentInfo.accountName,
+              accountNumber: paymentInfo.accountNumber,
+            }
+          : FORM_DEFAULT_VALUES.details.paymentInformation,
+      },
+    };
+
+    reset(profileDefaults);
     setInvoicePdf(new Blob());
 
     // Clear the draft
@@ -161,28 +237,69 @@ export const InvoiceContextProvider = ({
    * @returns {Promise<void>} - A promise that resolves when the PDF is successfully generated.
    * @throws {Error} - If an error occurs during the PDF generation process.
    */
-  const generatePdf = useCallback(async (data: InvoiceType) => {
-    setInvoicePdfLoading(true);
+  const generatePdf = useCallback(
+    async (data: InvoiceType) => {
+      setInvoicePdfLoading(true);
 
-    try {
-      const response = await fetch(GENERATE_PDF_API, {
-        method: "POST",
-        body: JSON.stringify(data),
-      });
+      // Ensure the PDF receives profile branding even when the user opened an
+      // old draft or never clicked "New Invoice" since configuring branding.
+      const enrichedData: InvoiceType = {
+        ...data,
+        details: {
+          ...data.details,
+          invoiceLogo:
+            data.details.invoiceLogo || profile.branding.logo || "",
+          watermarkImage:
+            data.details.watermarkImage ||
+            profile.branding.watermarkLogo ||
+            "",
+          brandColor:
+            data.details.brandColor ||
+            profile.branding.brandColor ||
+            "#2563eb",
+        },
+      };
 
-      const result = await response.blob();
-      setInvoicePdf(result);
+      try {
+        const response = await fetch(GENERATE_PDF_API, {
+          method: "POST",
+          body: JSON.stringify(enrichedData),
+        });
 
-      if (result.size > 0) {
-        // Toast
-        pdfGenerationSuccess();
+        const result = await response.blob();
+        setInvoicePdf(result);
+
+        if (result.size > 0) {
+          // Toast
+          pdfGenerationSuccess();
+
+          // Fire-and-forget: persist to DB so the invoice shows up on the dashboard.
+          // Unauthenticated users still get a PDF; the POST just 401s silently.
+          void fetch("/api/invoices", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({
+              payload: enrichedData,
+              documentType:
+                enrichedData.details.documentType ?? "facture",
+              totalTtc: Number(enrichedData.details.totalAmount) || 0,
+              currency: enrichedData.details.currency || "DZD",
+              totalAmountInWords:
+                enrichedData.details.totalAmountInWords ?? null,
+            }),
+          }).catch(() => {
+            // non-blocking: localStorage still has the invoice
+          });
+        }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setInvoicePdfLoading(false);
       }
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setInvoicePdfLoading(false);
-    }
-  }, []);
+    },
+    [profile, pdfGenerationSuccess]
+  );
 
   /**
    * Removes the final PDF file and switches to Live Preview
@@ -248,7 +365,7 @@ export const InvoiceContextProvider = ({
       // If get values function is provided, allow to save the invoice
       if (getValues) {
         // Retrieve the existing array from local storage or initialize an empty array
-        const savedInvoicesJSON = localStorage.getItem("savedInvoices");
+        const savedInvoicesJSON = localStorage.getItem(LOCAL_STORAGE_SAVED_INVOICES_KEY);
         const savedInvoices = savedInvoicesJSON
           ? JSON.parse(savedInvoicesJSON)
           : [];
@@ -279,11 +396,14 @@ export const InvoiceContextProvider = ({
           // Add the form values to the array
           savedInvoices.push(formValues);
 
+          // Auto-increment invoice number for next invoice
+          incrementInvoiceNumber();
+
           // Toast
           saveInvoiceSuccess();
         }
 
-        localStorage.setItem("savedInvoices", JSON.stringify(savedInvoices));
+        localStorage.setItem(LOCAL_STORAGE_SAVED_INVOICES_KEY, JSON.stringify(savedInvoices));
 
         setSavedInvoices(savedInvoices);
       }
@@ -304,8 +424,46 @@ export const InvoiceContextProvider = ({
 
       const updatedInvoicesJSON = JSON.stringify(updatedInvoices);
 
-      localStorage.setItem("savedInvoices", updatedInvoicesJSON);
+      localStorage.setItem(LOCAL_STORAGE_SAVED_INVOICES_KEY, updatedInvoicesJSON);
     }
+  };
+
+  /**
+   * Update the status of a saved invoice.
+   *
+   * @param {string} invoiceNumber - The invoice number to update.
+   * @param {string} status - The new status.
+   */
+  const updateInvoiceStatus = (
+    invoiceNumber: string,
+    status: InvoiceType["details"]["status"]
+  ) => {
+    const updatedInvoices = savedInvoices.map((inv) =>
+      inv.details.invoiceNumber === invoiceNumber
+        ? { ...inv, details: { ...inv.details, status } }
+        : inv
+    );
+    setSavedInvoices(updatedInvoices);
+    localStorage.setItem(LOCAL_STORAGE_SAVED_INVOICES_KEY, JSON.stringify(updatedInvoices));
+  };
+
+  /**
+   * Duplicate an invoice — loads it into the form with a new invoice number and today's date.
+   *
+   * @param {InvoiceType} invoice - The invoice to duplicate.
+   */
+  const duplicateInvoice = (invoice: InvoiceType) => {
+    const duplicated = structuredClone(invoice);
+    duplicated.details.invoiceNumber = getNextInvoiceNumber();
+    duplicated.details.invoiceDate = new Date() as unknown as string;
+    duplicated.details.dueDate = new Date() as unknown as string;
+    duplicated.details.status = "draft";
+    duplicated.details.updatedAt = undefined;
+    duplicated.details.invoiceLogo = "";
+    duplicated.details.signature = { data: "" };
+
+    reset(duplicated);
+    setInvoicePdf(new Blob());
   };
 
   /**
@@ -326,6 +484,10 @@ export const InvoiceContextProvider = ({
     })
       .then((res) => {
         if (res.ok) {
+          // Mark as sent if saved
+          const invoiceNumber = getValues().details.invoiceNumber;
+          updateInvoiceStatus(invoiceNumber, "sent");
+
           // Successful toast msg
           sendPdfSuccess();
         } else {
@@ -406,6 +568,8 @@ export const InvoiceContextProvider = ({
         previewPdfInTab,
         saveInvoice,
         deleteInvoice,
+        updateInvoiceStatus,
+        duplicateInvoice,
         sendPdfToMail,
         exportInvoiceAs,
         importInvoice,

@@ -27,6 +27,7 @@ import {
     Items,
     PaymentInformation,
     InvoiceSummary,
+    DocumentTypeSelector,
 } from "@/app/components";
 
 // Contexts
@@ -70,6 +71,7 @@ const InvoiceForm = () => {
                     <CardDescription>{_t("form.description")}</CardDescription>
                 </CardHeader>
                 <CardContent>
+                    <DocumentTypeSelector />
                     <div className="space-y-8">
                         <Wizard>
                             <WizardStep>

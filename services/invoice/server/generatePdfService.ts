@@ -1,16 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
-
-// Chromium
-import chromium from "@sparticuz/chromium";
+import fs from "fs";
+import path from "path";
 
 // Helpers
 import { getInvoiceTemplate } from "@/lib/helpers";
 
-// Variables
-import { ENV, TAILWIND_CDN } from "@/lib/variables";
+// Browser pool (shared singleton — avoids per-request Chromium launch overhead)
+import { getBrowser } from "@/lib/puppeteer/browserPool";
+import { logger } from "@/lib/logger";
 
 // Types
 import { InvoiceType } from "@/types";
+
+// Load self-hosted Tailwind CSS once at module init (avoids CDN dependency)
+let _tailwindCss: string | null = null;
+function getTailwindCss(): string {
+    if (!_tailwindCss) {
+        const cssPath = path.join(process.cwd(), "public", "tailwind-pdf.min.css");
+        _tailwindCss = fs.readFileSync(cssPath, "utf-8");
+    }
+    return _tailwindCss;
+}
 
 /**
  * Generate a PDF document of an invoice based on the provided data.
@@ -22,7 +32,6 @@ import { InvoiceType } from "@/types";
  */
 export async function generatePdfService(req: NextRequest) {
     const body: InvoiceType = await req.json();
-    let browser;
     let page;
 
     try {
@@ -33,39 +42,63 @@ export async function generatePdfService(req: NextRequest) {
             InvoiceTemplate(body)
         );
 
-		if (ENV === "production") {
-			const puppeteer = (await import("puppeteer-core")).default;
-			browser = await puppeteer.launch({
-				args: [...chromium.args, "--disable-dev-shm-usage", "--ignore-certificate-errors"],
-				executablePath: await chromium.executablePath(),
-				headless: true,
-			});
-		} else {
-			const puppeteer = (await import("puppeteer")).default;
-			browser = await puppeteer.launch({
-				args: ["--no-sandbox", "--disable-setuid-sandbox"],
-				headless: true,
-			});
-		}
-
-        if (!browser) {
-            throw new Error("Failed to launch browser");
-        }
-
+        const browser = await getBrowser();
         page = await browser.newPage();
-        await page.setContent(await htmlTemplate, {
-            waitUntil: ["networkidle0", "load", "domcontentloaded"],
+
+        // A4 at 96dpi so `position: fixed` elements and CSS layout anchor to
+        // the actual page box Puppeteer will render.
+        await page.setViewport({ width: 794, height: 1123, deviceScaleFactor: 1 });
+
+        // Build a complete HTML document with Tailwind CSS inlined from disk
+        // so there is no external network dependency during PDF rendering.
+        const fullHtml = `<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>${getTailwindCss()}</style>
+    <style>
+      @page { size: A4; margin: 0; }
+      body { margin: 0; padding: 0; font-family: sans-serif; }
+    </style>
+  </head>
+  <body>${htmlTemplate}</body>
+</html>`;
+
+        await page.setContent(fullHtml, {
+            waitUntil: "load",
             timeout: 30000,
         });
 
-        await page.addStyleTag({
-            url: TAILWIND_CDN,
-        });
+        // Ensure any <img> (logo, watermark) have fully decoded.
+        await page
+            .evaluate(async () => {
+                const imgs = Array.from(document.images);
+                await Promise.all(
+                    imgs.map((img) =>
+                        img.complete
+                            ? Promise.resolve()
+                            : new Promise((res) => {
+                                  img.addEventListener("load", res);
+                                  img.addEventListener("error", res);
+                              })
+                    )
+                );
+            })
+            .catch(() => {});
 
 		const pdf: Uint8Array = await page.pdf({
 			format: "a4",
 			printBackground: true,
-			preferCSSPageSize: true,
+			preferCSSPageSize: false,
+			displayHeaderFooter: true,
+			headerTemplate: '<span></span>',
+			footerTemplate: `
+				<div style="font-size:9px;width:100%;text-align:center;color:#999;padding:0 40px;font-family:sans-serif;">
+					<span class="pageNumber"></span> / <span class="totalPages"></span>
+				</div>
+			`,
+			margin: { top: '20px', right: '0px', bottom: '40px', left: '0px' },
 		});
 
 		return new NextResponse(new Blob([pdf], { type: "application/pdf" }), {
@@ -78,7 +111,7 @@ export async function generatePdfService(req: NextRequest) {
 			status: 200,
 		});
 	} catch (error: any) {
-		console.error("PDF Generation Error:", error);
+		logger.error({ err: error }, "pdf generation failed");
 		return new NextResponse(
 			JSON.stringify({ error: "Failed to generate PDF" }),
 			{
@@ -88,22 +121,13 @@ export async function generatePdfService(req: NextRequest) {
 				},
 			}
 		);
-	} finally {
-		if (page) {
-			try {
-				await page.close();
-			} catch (e) {
-				console.error("Error closing page:", e);
-			}
-		}
-		if (browser) {
-			try {
-				const pages = await browser.pages();
-				await Promise.all(pages.map((p) => p.close()));
-				await browser.close();
-			} catch (e) {
-				console.error("Error closing browser:", e);
-			}
-		}
-	}
+    } finally {
+        if (page) {
+            try {
+                await page.close();
+            } catch (e) {
+                logger.error({ err: e }, "puppeteer page close failed");
+            }
+        }
+    }
 }

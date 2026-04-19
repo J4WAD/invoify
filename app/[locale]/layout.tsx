@@ -1,5 +1,5 @@
 // Components
-import { BaseFooter, BaseNavbar } from "@/app/components";
+import { BaseFooter, BaseNavbar, OfflineIndicator } from "@/app/components";
 // ShadCn
 import { Toaster } from "@/components/ui/toaster";
 // Contexts
@@ -26,10 +26,11 @@ import { NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
-    title: "Invoify | Free Invoice Generator",
+    title: "FacturApp | Générateur de Factures Professionnel",
     description:
-        "Create invoices effortlessly with Invoify, the free invoice generator. Try it now!",
+        "Créez vos factures professionnelles en quelques secondes avec FacturApp. Gratuit, rapide et personnalisable.",
     icons: [{ rel: "icon", url: Favicon.src }],
+    manifest: "/manifest.json",
     keywords: ROOTKEYWORDS,
     robots: {
         index: true,
@@ -39,8 +40,8 @@ export const metadata: Metadata = {
         canonical: BASE_URL,
     },
     authors: {
-        name: "Ali Abbasov",
-        url: "https://aliabb.vercel.app",
+        name: "Djaouad Azzouz",
+        url: "https://siferone.com",
     },
     verification: {
         google: GOOGLE_SC_VERIFICATION,
@@ -50,6 +51,7 @@ export const metadata: Metadata = {
 export const viewport = {
     width: "device-width",
     initialScale: 1,
+    themeColor: "#2563eb",
 };
 
 export function generateStaticParams() {
@@ -84,7 +86,6 @@ export default async function LocaleLayout(props: {
                     id="json-ld"
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(JSONLD) }}
                 />
-                <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="aliabb" data-description="Support me on Buy me a coffee!" data-message="Thank you for using Invoify" data-color="#5F7FFF" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
             </head>
             <body
                 className={`${outfit.className} ${dancingScript.variable} ${parisienne.variable} ${greatVibes.variable} ${alexBrush.variable} antialiased bg-slate-100 dark:bg-slate-800`}
@@ -100,6 +101,9 @@ export default async function LocaleLayout(props: {
 
                         {/* Toast component */}
                         <Toaster />
+
+                        {/* Offline banner */}
+                        <OfflineIndicator />
 
                         {/* Vercel analytics */}
                         <Analytics />

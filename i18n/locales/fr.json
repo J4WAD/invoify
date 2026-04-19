@@ -1,93 +1,168 @@
 {
-    "form": {
-        "title": "Facture",
-        "description": "Générer une facture",
-        "newInvBadge": "Nouvelle facture",
-        "wizard": {
-            "fromAndTo": "De & À",
-            "invoiceDetails": "Détails de la facture",
-            "lineItems": "Articles",
-            "paymentInfo": "Informations de paiement",
-            "summary": "Résumé",
-            "next": "Suivant",
-            "back": "Retour"
+  "documentType": {
+    "selectType": "Type de document",
+    "facture": "Facture",
+    "devis": "Devis",
+    "bon_de_livraison": "Bon de livraison",
+    "avoir": "Avoir",
+    "bon_de_commande": "Bon de commande",
+    "pro_forma": "Pro forma",
+    "bon_de_reception": "Bon de réception"
+  },
+  "form": {
+    "title": "Facture",
+    "description": "Générer une facture",
+    "newInvBadge": "Nouvelle facture",
+    "wizard": {
+      "fromAndTo": "De & À",
+      "invoiceDetails": "Détails de la facture",
+      "lineItems": "Articles",
+      "paymentInfo": "Informations de paiement",
+      "summary": "Résumé",
+      "next": "Suivant",
+      "back": "Retour"
+    },
+    "steps": {
+      "fromAndTo": {
+        "billFrom": "Facturé de",
+        "billTo": "Facturé à",
+        "name": "Nom/Prénom",
+        "address": "Adresse",
+        "zipCode": "Code postal",
+        "city": "Ville",
+        "country": "Pays",
+        "email": "Email",
+        "phone": "Téléphone",
+        "nif": "NIF",
+        "rc": "RC",
+        "ai": "Article d'imposition",
+        "nis": "NIS",
+        "addCustomInput": "Ajouter une entrée personnalisée",
+        "sender": "Expéditeur",
+        "receiver": "Destinataire",
+        "complianceWarning": "Identifiants fiscaux manquants pour la conformité DGI :"
+      },
+      "invoiceDetails": {
+        "heading": "Détails de la facture",
+        "invoiceLogo": {
+          "label": "Logo de la facture",
+          "placeholder": "Cliquez pour télécharger une image"
         },
-        "steps": {
-            "fromAndTo": {
-                "billFrom": "Facturé de",
-                "billTo": "Facturé à",
-                "name": "Nom/Prénom:",
-                "address": "Adresse",
-                "zipCode": "Code postal",
-                "city": "Ville",
-                "country": "Pays",
-                "email": "Email",
-                "phone": "Téléphone",
-                "addCustomInput": "Ajouter une entrée personnalisée",
-                "sender": "Expéditeur",
-                "receiver": "Destinataire"
-            },
-            "invoiceDetails": {
-                "heading": "Détails de la facture",
-                "invoiceLogo": {
-                    "label": "Logo de la facture",
-                    "placeholder": "Cliquez pour télécharger une image"
-                },
-                "invoiceNumber": "Numéro de facture",
-                "issuedDate": "Date d'émission",
-                "dueDate": "Date d'échéance",
-                "currency": "Devise"
-            },
-            "lineItems": {
-                "heading": "Articles",
-                "item": "Article",
-                "name": "Nom",
-                "quantity": "Quantité",
-                "rate": "Taux",
-                "total": "Total",
-                "description": "Description",
-                "addNewItem": "Ajouter un nouvel article",
-                "removeItem": "Supprimer l'article"
-            },
-            "paymentInfo": {
-                "heading": "Informations de paiement",
-                "bankName": "Nom de la banque",
-                "accountName": "Nom du compte",
-                "accountNumber": "Numéro de compte"
-            },
-            "summary": {
-                "heading": "Résumé",
-                "signature": {
-                    "heading": "Signature",
-                    "placeholder": "Cliquez pour ajouter une signature",
-                    "description": "Choisissez une méthode pour ajouter votre signature à la facture",
-                    "draw": "Dessiner",
-                    "type": "Taper",
-                    "upload": "Télécharger"
-                },
-                "additionalNotes": "Notes supplémentaires",
-                "paymentTerms": "Conditions de paiement",
-                "discount": "Remise",
-                "tax": "Taxe",
-                "shipping": "Expédition",
-                "subTotal": "Sous-total",
-                "totalAmount": "Montant total",
-                "includeTotalInWords": "Inclure le total en mots?",
-                "yes": "Oui",
-                "no": "Non"
-            }
+        "invoiceNumber": "Numéro de facture",
+        "issuedDate": "Date d'émission",
+        "dueDate": "Date d'échéance",
+        "currency": "Devise",
+        "brandColor": "Couleur de marque",
+        "devisValidity": "Validité de l'offre",
+        "taxRegime": {
+          "label": "Régime TVA",
+          "ASSUJETTI_TVA": "Assujetti TVA",
+          "DISPENSE_IFU": "Dispensé IFU (Art. 282 ter)",
+          "EXONERE": "Exonéré de TVA"
         }
-    },
-    "actions": {
-        "title": "Actions",
-        "description": "Opérations et aperçu",
-        "loadInvoice": "Charger la facture",
-        "exportInvoice": "Exporter la facture",
-        "newInvoice": "Nouvelle facture",
-        "generatePdf": "Générer un PDF",
-        "pdfView": "Vue PDF"
-    },
-    "footer": {
-        "developedBy": "Développé par"
+      },
+      "lineItems": {
+        "heading": "Articles",
+        "item": "Article",
+        "name": "Nom",
+        "quantity": "Quantité",
+        "rate": "Taux",
+        "total": "Total",
+        "description": "Description",
+        "addNewItem": "Ajouter un nouvel article",
+        "removeItem": "Supprimer l'article"
+      },
+      "paymentInfo": {
+        "heading": "Informations de paiement",
+        "bankName": "Nom de la banque",
+        "accountName": "Nom du compte",
+        "accountNumber": "Numéro de compte"
+      },
+      "summary": {
+        "heading": "Résumé",
+        "signature": {
+          "heading": "Signature",
+          "placeholder": "Cliquez pour ajouter une signature",
+          "description": "Choisissez une méthode pour ajouter votre signature à la facture",
+          "draw": "Dessiner",
+          "type": "Taper",
+          "upload": "Télécharger"
+        },
+        "additionalNotes": "Notes supplémentaires",
+        "paymentTerms": "Conditions de paiement",
+        "discount": "Remise",
+        "tax": "Taxe",
+        "shipping": "Expédition",
+        "subTotal": "Sous-total",
+        "totalAmount": "Montant total",
+        "includeTotalInWords": "Inclure le total en mots?",
+        "yes": "Oui",
+        "no": "Non"
+      }
     }
+  },
+  "actions": {
+    "title": "Actions",
+    "description": "Opérations et aperçu",
+    "loadInvoice": "Charger la facture",
+    "exportInvoice": "Exporter la facture",
+    "newInvoice": "Nouvelle facture",
+    "generatePdf": "Générer un PDF",
+    "pdfView": "Vue PDF"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "description": "Configurez votre profil et vos préférences de facturation",
+    "save": "Enregistrer",
+    "reset": "Réinitialiser",
+    "businessInfo": {
+      "title": "Entreprise",
+      "description": "Vos coordonnées utilisées comme expéditeur par défaut",
+      "saved": "Informations de l'entreprise enregistrées"
+    },
+    "branding": {
+      "title": "Image",
+      "description": "Personnalisez l'apparence de vos factures",
+      "logo": "Logo de l'entreprise",
+      "watermark": "Logo filigrane",
+      "brandColor": "Couleur de marque",
+      "defaultTemplate": "Modèle par défaut",
+      "saved": "Image de marque enregistrée"
+    },
+    "invoiceDefaults": {
+      "title": "Défauts",
+      "description": "Valeurs par défaut pour les nouvelles factures",
+      "currency": "Devise par défaut",
+      "language": "Langue par défaut",
+      "numbering": "Numérotation",
+      "invoicePrefix": "Préfixe de facture",
+      "nextNumber": "Prochain numéro",
+      "preview": "Aperçu",
+      "defaultCharges": "Charges par défaut",
+      "taxRate": "Taux de taxe par défaut",
+      "taxID": "Numéro fiscal",
+      "paymentTerms": "Conditions de paiement par défaut",
+      "additionalNotes": "Notes supplémentaires par défaut",
+      "saved": "Paramètres par défaut enregistrés"
+    },
+    "paymentInfo": {
+      "title": "Paiement",
+      "description": "Coordonnées bancaires par défaut pour vos factures",
+      "saved": "Informations de paiement enregistrées"
+    }
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "ytdRevenue": "Chiffre d'affaires (année en cours)",
+    "unpaid": "Impayé",
+    "overdue": "En retard",
+    "recentInvoices": "Factures récentes"
+  },
+  "footer": {
+    "developedBy": "Développé par"
+  },
+  "languageSelector": {
+    "placeholder": "Sélectionnez une langue",
+    "title": "Langues"
+  }
 }

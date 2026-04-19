@@ -114,7 +114,7 @@ const Charges = () => {
                         <div>{_t("form.steps.summary.subTotal")}</div>
 
                         <div>
-                            {formatNumberWithCommas(subTotal)} {currency}
+                            {formatNumberWithCommas(subTotal, currency)} {currency}
                         </div>
                     </div>
                     {discountSwitch && (
@@ -155,7 +155,7 @@ const Charges = () => {
 
                         <div className="">
                             <p>
-                                {formatNumberWithCommas(totalAmount)} {currency}
+                                {formatNumberWithCommas(totalAmount, currency)} {currency}
                             </p>
 
                             <small className="text-sm font-medium text-destructive">

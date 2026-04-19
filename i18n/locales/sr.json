@@ -1,93 +1,168 @@
 {
-    "form": {
-        "title": "Faktura",
-        "description": "Napravi fakturu",
-        "newInvBadge": "Nova faktura",
-        "wizard": {
-            "fromAndTo": "Od i za",
-            "invoiceDetails": "Detalji fakture",
-            "lineItems": "Stavke",
-            "paymentInfo": "Informacije o plaćanju",
-            "summary": "Rezime",
-            "next": "Dalje",
-            "back": "Nazad"
+  "documentType": {
+    "selectType": "Тип документа",
+    "facture": "Фактура",
+    "devis": "Понуда",
+    "bon_de_livraison": "Отпремница",
+    "avoir": "Књижно одобрење",
+    "bon_de_commande": "Наруџбеница",
+    "pro_forma": "Про форма",
+    "bon_de_reception": "Потврда пријема"
+  },
+  "form": {
+    "title": "Faktura",
+    "description": "Napravi fakturu",
+    "newInvBadge": "Nova faktura",
+    "wizard": {
+      "fromAndTo": "Od i za",
+      "invoiceDetails": "Detalji fakture",
+      "lineItems": "Stavke",
+      "paymentInfo": "Informacije o plaćanju",
+      "summary": "Rezime",
+      "next": "Dalje",
+      "back": "Nazad"
+    },
+    "steps": {
+      "fromAndTo": {
+        "billFrom": "Faktura od",
+        "billTo": "Faktura za",
+        "name": "Ime",
+        "address": "Adresa",
+        "zipCode": "Zip",
+        "city": "Grad",
+        "country": "Država",
+        "email": "Email",
+        "phone": "Telefon",
+        "nif": "NIF",
+        "rc": "RC",
+        "ai": "Poreski član",
+        "nis": "NIS",
+        "addCustomInput": "Dodajte prilagođeni unos",
+        "sender": "Pošiljalac",
+        "receiver": "Primalac",
+        "complianceWarning": "Nedostaju poreski ID-ovi za usaglašenost:"
+      },
+      "invoiceDetails": {
+        "heading": "Detalji fakture",
+        "invoiceLogo": {
+          "label": "Logo fakture",
+          "placeholder": "Kliknite da biste otpremili sliku"
         },
-        "steps": {
-            "fromAndTo": {
-                "billFrom": "Faktura od",
-                "billTo": "Faktura za",
-                "name": "Ime",
-                "address": "Adresa",
-                "zipCode": "Zip",
-                "city": "Grad",
-                "country": "Država",
-                "email": "Email",
-                "phone": "Telefon",
-                "addCustomInput": "Dodajte prilagođeni unos",
-                "sender": "Pošiljalac",
-                "receiver": "Primalac"
-            },
-            "invoiceDetails": {
-                "heading": "Detalji fakture",
-                "invoiceLogo": {
-                    "label": "Logo fakture",
-                    "placeholder": "Kliknite da biste otpremili sliku"
-                },
-                "invoiceNumber": "Broj fakture",
-                "issuedDate": "Datum izdavanja",
-                "dueDate": "Krajnji rok",
-                "currency": "Valuta"
-            },
-            "lineItems": {
-                "heading": "Predmeti",
-                "item": "Predmet",
-                "name": "Ime",
-                "quantity": "Količina",
-                "rate": "Stopa",
-                "total": "Ukupno",
-                "description": "Opis",
-                "addNewItem": "Dodaj novi predmet",
-                "removeItem": "Ukloni predmet"
-            },
-            "paymentInfo": {
-                "heading": "Informacije o plaćanju",
-                "bankName": "Ime Banke",
-                "accountName": "Naziv naloga",
-                "accountNumber": "Broj računa"
-            },
-            "summary": {
-                "heading": "Rezime",
-                "signature": {
-                    "heading": "Potpis",
-                    "placeholder": "Klikni da dodaš potpis",
-                    "description": "Izaberite metodu za dodavanje potpisa na fakturu",
-                    "draw": "Crtaj",
-                    "type": "Piši",
-                    "upload": "Otpremi"
-                },
-                "additionalNotes": "Dodatne napomene",
-                "paymentTerms": "Uslovi plaćanja",
-                "discount": "Popust",
-                "tax": "Takse",
-                "shipping": "Dostava",
-                "subTotal": "Međuzbir",
-                "totalAmount": "Ukupan iznos",
-                "includeTotalInWords": "Uključiti ukupan iznos rečima?",
-                "yes": "Da",
-                "no": "Ne"
-            }
+        "invoiceNumber": "Broj fakture",
+        "issuedDate": "Datum izdavanja",
+        "dueDate": "Krajnji rok",
+        "currency": "Valuta",
+        "brandColor": "Боја бренда",
+        "devisValidity": "Важност понуде",
+        "taxRegime": {
+          "label": "Poreski režim",
+          "ASSUJETTI_TVA": "PDV obveznik",
+          "DISPENSE_IFU": "IFU oslobođen (čl. 282 ter)",
+          "EXONERE": "Oslobođen PDV-a"
         }
-    },
-    "actions": {
-        "title": "Radnje",
-        "description": "Operacije i pregled",
-        "loadInvoice": "Učitaj fakturu",
-        "exportInvoice": "Izbaci fakturu",
-        "newInvoice": "Nova faktura",
-        "generatePdf": "Generiši PDF",
-        "pdfView": "Pogledaj PDF"
-    },
-    "footer": {
-        "developedBy": "Napravljeno od strane"
+      },
+      "lineItems": {
+        "heading": "Predmeti",
+        "item": "Predmet",
+        "name": "Ime",
+        "quantity": "Količina",
+        "rate": "Stopa",
+        "total": "Ukupno",
+        "description": "Opis",
+        "addNewItem": "Dodaj novi predmet",
+        "removeItem": "Ukloni predmet"
+      },
+      "paymentInfo": {
+        "heading": "Informacije o plaćanju",
+        "bankName": "Ime Banke",
+        "accountName": "Naziv naloga",
+        "accountNumber": "Broj računa"
+      },
+      "summary": {
+        "heading": "Rezime",
+        "signature": {
+          "heading": "Potpis",
+          "placeholder": "Klikni da dodaš potpis",
+          "description": "Izaberite metodu za dodavanje potpisa na fakturu",
+          "draw": "Crtaj",
+          "type": "Piši",
+          "upload": "Otpremi"
+        },
+        "additionalNotes": "Dodatne napomene",
+        "paymentTerms": "Uslovi plaćanja",
+        "discount": "Popust",
+        "tax": "Takse",
+        "shipping": "Dostava",
+        "subTotal": "Međuzbir",
+        "totalAmount": "Ukupan iznos",
+        "includeTotalInWords": "Uključiti ukupan iznos rečima?",
+        "yes": "Da",
+        "no": "Ne"
+      }
     }
+  },
+  "actions": {
+    "title": "Radnje",
+    "description": "Operacije i pregled",
+    "loadInvoice": "Učitaj fakturu",
+    "exportInvoice": "Izbaci fakturu",
+    "newInvoice": "Nova faktura",
+    "generatePdf": "Generiši PDF",
+    "pdfView": "Pogledaj PDF"
+  },
+  "footer": {
+    "developedBy": "Napravljeno od strane"
+  },
+  "languageSelector": {
+    "placeholder": "Izaberite jezik",
+    "title": "Jezici"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Configure your profile and invoicing preferences",
+    "save": "Save",
+    "reset": "Reset",
+    "businessInfo": {
+      "title": "Business",
+      "description": "Your company details used as the default sender",
+      "saved": "Business info saved"
+    },
+    "branding": {
+      "title": "Branding",
+      "description": "Customize your invoice appearance",
+      "logo": "Company Logo",
+      "watermark": "Watermark Logo",
+      "brandColor": "Brand Color",
+      "defaultTemplate": "Default Template",
+      "saved": "Branding saved"
+    },
+    "invoiceDefaults": {
+      "title": "Defaults",
+      "description": "Default values for new invoices",
+      "currency": "Default Currency",
+      "language": "Default Language",
+      "numbering": "Numbering",
+      "invoicePrefix": "Invoice Prefix",
+      "nextNumber": "Next Number",
+      "preview": "Preview",
+      "defaultCharges": "Default Charges",
+      "taxRate": "Default Tax Rate",
+      "taxID": "Tax ID",
+      "paymentTerms": "Default Payment Terms",
+      "additionalNotes": "Default Additional Notes",
+      "saved": "Invoice defaults saved"
+    },
+    "paymentInfo": {
+      "title": "Payment",
+      "description": "Default payment details for your invoices",
+      "saved": "Payment info saved"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "ytdRevenue": "Year-to-date revenue",
+    "unpaid": "Unpaid",
+    "overdue": "Overdue",
+    "recentInvoices": "Recent invoices"
+  }
 }

@@ -86,6 +86,8 @@ const CustomInputSchema = z.object({
     value: z.string(),
 });
 
+const taxIdField = z.string().max(20).optional();
+
 const InvoiceSenderSchema = z.object({
     name: fieldValidators.name,
     address: fieldValidators.address,
@@ -95,6 +97,14 @@ const InvoiceSenderSchema = z.object({
     email: fieldValidators.email,
     phone: fieldValidators.phone,
     customInputs: z.array(CustomInputSchema).optional(),
+    /** Algerian compliance: Numéro d'Identification Fiscale */
+    nif: taxIdField,
+    /** Algerian compliance: Registre de Commerce */
+    rc: taxIdField,
+    /** Algerian compliance: Article d'Imposition */
+    ai: taxIdField,
+    /** Algerian compliance: Numéro d'Identification Statistique */
+    nis: taxIdField,
 });
 
 const InvoiceReceiverSchema = z.object({
@@ -106,6 +116,11 @@ const InvoiceReceiverSchema = z.object({
     email: fieldValidators.email,
     phone: fieldValidators.phone,
     customInputs: z.array(CustomInputSchema).optional(),
+    /** Algerian compliance fields for professional clients */
+    nif: taxIdField,
+    nis: taxIdField,
+    rc:  taxIdField,
+    ai:  taxIdField,
 });
 
 const ItemSchema = z.object({
@@ -144,6 +159,17 @@ const SignatureSchema = z.object({
 });
 
 const InvoiceDetailsSchema = z.object({
+    documentType: z
+        .enum([
+            "facture",
+            "devis",
+            "bon_de_livraison",
+            "avoir",
+            "bon_de_commande",
+            "pro_forma",
+            "bon_de_reception",
+        ])
+        .default("facture"),
     invoiceLogo: fieldValidators.stringOptional,
     invoiceNumber: fieldValidators.stringMin1,
     invoiceDate: fieldValidators.date,
@@ -151,6 +177,10 @@ const InvoiceDetailsSchema = z.object({
     purchaseOrderNumber: fieldValidators.stringOptional,
     currency: fieldValidators.string,
     language: fieldValidators.string,
+    /** Brand color used as the primary accent in PDF templates */
+    brandColor: fieldValidators.stringOptional,
+    /** Separate watermark image (base64) — repeats on every PDF page */
+    watermarkImage: fieldValidators.stringOptional,
     items: z.array(ItemSchema),
     paymentInformation: PaymentInformationSchema.optional(),
     taxDetails: TaxDetailsSchema.optional(),
@@ -162,8 +192,17 @@ const InvoiceDetailsSchema = z.object({
     additionalNotes: fieldValidators.stringOptional,
     paymentTerms: fieldValidators.stringMin1,
     signature: SignatureSchema.optional(),
+    status: z.enum(["draft", "issued", "sent", "paid", "overdue", "cancelled"]).optional(),
     updatedAt: fieldValidators.stringOptional,
     pdfTemplate: z.number(),
+    devisValidity: fieldValidators.stringOptional,
+    /** Algerian fiscal regime — controls TVA display and legal mention */
+    taxRegime: z
+        .enum(["ASSUJETTI_TVA", "DISPENSE_IFU", "EXONERE"])
+        .default("ASSUJETTI_TVA")
+        .optional(),
+    /** Set server-side on finalize — not editable by user after issuance */
+    referencesInvoiceNumber: fieldValidators.stringOptional,
 });
 
 const InvoiceSchema = z.object({

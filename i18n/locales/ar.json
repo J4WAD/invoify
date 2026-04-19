@@ -1,4 +1,14 @@
 {
+  "documentType": {
+    "selectType": "نوع المستند",
+    "facture": "فاتورة",
+    "devis": "عرض سعر",
+    "bon_de_livraison": "سند تسليم",
+    "avoir": "إشعار دائن",
+    "bon_de_commande": "أمر شراء",
+    "pro_forma": "فاتورة أولية",
+    "bon_de_reception": "وصل استلام"
+  },
   "form": {
     "title": "فاتورة",
     "description": "إنشاء الفاتورة",
@@ -23,9 +33,14 @@
         "country": "الدولة",
         "email": "البريد الإلكتروني",
         "phone": "الهاتف",
+        "nif": "NIF",
+        "rc": "RC",
+        "ai": "رقم المادة الضريبية",
+        "nis": "NIS",
         "addCustomInput": "إضافة مدخل مخصص",
         "sender": "المرسل",
-        "receiver": "المستلم"
+        "receiver": "المستلم",
+        "complianceWarning": "معرفات ضريبية مفقودة للامتثال:"
       },
       "invoiceDetails": {
         "heading": "تفاصيل الفاتورة",
@@ -36,7 +51,15 @@
         "invoiceNumber": "رقم الفاتورة",
         "issuedDate": "تاريخ الإصدار",
         "dueDate": "تاريخ الاستحقاق",
-        "currency": "العملة"
+        "currency": "العملة",
+        "brandColor": "لون العلامة التجارية",
+        "devisValidity": "صلاحية العرض",
+        "taxRegime": {
+          "label": "نظام الضريبة",
+          "ASSUJETTI_TVA": "خاضع للرسم على القيمة المضافة",
+          "DISPENSE_IFU": "معفى IFU (المادة 282 ثالثاً)",
+          "EXONERE": "معفى من الضريبة"
+        }
       },
       "lineItems": {
         "heading": "العناصر",
@@ -89,5 +112,57 @@
   },
   "footer": {
     "developedBy": "تم تطويره بواسطة"
+  },
+  "languageSelector": {
+    "placeholder": "اختر لغة",
+    "title": "اللغات"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Configure your profile and invoicing preferences",
+    "save": "Save",
+    "reset": "Reset",
+    "businessInfo": {
+      "title": "Business",
+      "description": "Your company details used as the default sender",
+      "saved": "Business info saved"
+    },
+    "branding": {
+      "title": "Branding",
+      "description": "Customize your invoice appearance",
+      "logo": "Company Logo",
+      "watermark": "Watermark Logo",
+      "brandColor": "Brand Color",
+      "defaultTemplate": "Default Template",
+      "saved": "Branding saved"
+    },
+    "invoiceDefaults": {
+      "title": "Defaults",
+      "description": "Default values for new invoices",
+      "currency": "Default Currency",
+      "language": "Default Language",
+      "numbering": "Numbering",
+      "invoicePrefix": "Invoice Prefix",
+      "nextNumber": "Next Number",
+      "preview": "Preview",
+      "defaultCharges": "Default Charges",
+      "taxRate": "Default Tax Rate",
+      "taxID": "Tax ID",
+      "paymentTerms": "Default Payment Terms",
+      "additionalNotes": "Default Additional Notes",
+      "saved": "Invoice defaults saved"
+    },
+    "paymentInfo": {
+      "title": "Payment",
+      "description": "Default payment details for your invoices",
+      "saved": "Payment info saved"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "ytdRevenue": "Year-to-date revenue",
+    "unpaid": "Unpaid",
+    "overdue": "Overdue",
+    "recentInvoices": "Recent invoices"
   }
 }

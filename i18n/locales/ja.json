@@ -1,93 +1,168 @@
 {
-    "form": {
-        "title": "請求書",
-        "description": "請求書を作成",
-        "newInvBadge": "新しい請求書",
-        "wizard": {
-            "fromAndTo": "送信者 & 受信者",
-            "invoiceDetails": "請求書の詳細",
-            "lineItems": "品目",
-            "paymentInfo": "支払い情報",
-            "summary": "概要",
-            "next": "次へ",
-            "back": "戻る"
+  "documentType": {
+    "selectType": "文書タイプ",
+    "facture": "請求書",
+    "devis": "見積書",
+    "bon_de_livraison": "納品書",
+    "avoir": "クレジットノート",
+    "bon_de_commande": "注文書",
+    "pro_forma": "プロフォーマ",
+    "bon_de_reception": "受領書"
+  },
+  "form": {
+    "title": "請求書",
+    "description": "請求書を作成",
+    "newInvBadge": "新しい請求書",
+    "wizard": {
+      "fromAndTo": "送信者 & 受信者",
+      "invoiceDetails": "請求書の詳細",
+      "lineItems": "品目",
+      "paymentInfo": "支払い情報",
+      "summary": "概要",
+      "next": "次へ",
+      "back": "戻る"
+    },
+    "steps": {
+      "fromAndTo": {
+        "billFrom": "請求元",
+        "billTo": "請求先",
+        "name": "名前",
+        "address": "住所",
+        "zipCode": "郵便番号",
+        "city": "市区町村",
+        "country": "国",
+        "email": "メール",
+        "phone": "電話",
+        "nif": "NIF",
+        "rc": "RC",
+        "ai": "課税条項",
+        "nis": "NIS",
+        "addCustomInput": "カスタム入力を追加",
+        "sender": "送信者",
+        "receiver": "受信者",
+        "complianceWarning": "コンプライアンスに必要な税務IDが不足しています："
+      },
+      "invoiceDetails": {
+        "heading": "請求書の詳細",
+        "invoiceLogo": {
+          "label": "請求書のロゴ",
+          "placeholder": "クリックして画像をアップロード"
         },
-        "steps": {
-            "fromAndTo": {
-                "billFrom": "請求元",
-                "billTo": "請求先",
-                "name": "名前",
-                "address": "住所",
-                "zipCode": "郵便番号",
-                "city": "市区町村",
-                "country": "国",
-                "email": "メール",
-                "phone": "電話",
-                "addCustomInput": "カスタム入力を追加",
-                "sender": "送信者",
-                "receiver": "受信者"
-            },
-            "invoiceDetails": {
-                "heading": "請求書の詳細",
-                "invoiceLogo": {
-                    "label": "請求書のロゴ",
-                    "placeholder": "クリックして画像をアップロード"
-                },
-                "invoiceNumber": "請求書番号",
-                "issuedDate": "発行日",
-                "dueDate": "支払期限",
-                "currency": "通貨"
-            },
-            "lineItems": {
-                "heading": "品目",
-                "item": "項目",
-                "name": "名称",
-                "quantity": "数量",
-                "rate": "単価",
-                "total": "合計",
-                "description": "説明",
-                "addNewItem": "新しい項目を追加",
-                "removeItem": "項目を削除"
-            },
-            "paymentInfo": {
-                "heading": "支払い情報",
-                "bankName": "銀行名",
-                "accountName": "口座名義",
-                "accountNumber": "口座番号"
-            },
-            "summary": {
-                "heading": "概要",
-                "signature": {
-                    "heading": "署名",
-                    "placeholder": "クリックして署名を追加",
-                    "description": "請求書に署名を追加する方法を選択してください",
-                    "draw": "手書き",
-                    "type": "入力",
-                    "upload": "アップロード"
-                },
-                "additionalNotes": "追加のメモ",
-                "paymentTerms": "支払い条件",
-                "discount": "割引",
-                "tax": "税金",
-                "shipping": "送料",
-                "subTotal": "小計",
-                "totalAmount": "合計金額",
-                "includeTotalInWords": "合計金額を文字で表示しますか？",
-                "yes": "はい",
-                "no": "いいえ"
-            }
+        "invoiceNumber": "請求書番号",
+        "issuedDate": "発行日",
+        "dueDate": "支払期限",
+        "currency": "通貨",
+        "brandColor": "ブランドカラー",
+        "devisValidity": "見積有効期限",
+        "taxRegime": {
+          "label": "課税制度",
+          "ASSUJETTI_TVA": "消費税課税事業者",
+          "DISPENSE_IFU": "IFU免除 (第282 ter条)",
+          "EXONERE": "消費税免除"
         }
-    },
-    "actions": {
-        "title": "操作",
-        "description": "処理とプレビュー",
-        "loadInvoice": "請求書を読み込む",
-        "exportInvoice": "請求書をエクスポート",
-        "newInvoice": "新しい請求書",
-        "generatePdf": "PDFを生成",
-        "pdfView": "PDFビュー"
-    },
-    "footer": {
-        "developedBy": "開発者"
+      },
+      "lineItems": {
+        "heading": "品目",
+        "item": "項目",
+        "name": "名称",
+        "quantity": "数量",
+        "rate": "単価",
+        "total": "合計",
+        "description": "説明",
+        "addNewItem": "新しい項目を追加",
+        "removeItem": "項目を削除"
+      },
+      "paymentInfo": {
+        "heading": "支払い情報",
+        "bankName": "銀行名",
+        "accountName": "口座名義",
+        "accountNumber": "口座番号"
+      },
+      "summary": {
+        "heading": "概要",
+        "signature": {
+          "heading": "署名",
+          "placeholder": "クリックして署名を追加",
+          "description": "請求書に署名を追加する方法を選択してください",
+          "draw": "手書き",
+          "type": "入力",
+          "upload": "アップロード"
+        },
+        "additionalNotes": "追加のメモ",
+        "paymentTerms": "支払い条件",
+        "discount": "割引",
+        "tax": "税金",
+        "shipping": "送料",
+        "subTotal": "小計",
+        "totalAmount": "合計金額",
+        "includeTotalInWords": "合計金額を文字で表示しますか？",
+        "yes": "はい",
+        "no": "いいえ"
+      }
     }
+  },
+  "actions": {
+    "title": "操作",
+    "description": "処理とプレビュー",
+    "loadInvoice": "請求書を読み込む",
+    "exportInvoice": "請求書をエクスポート",
+    "newInvoice": "新しい請求書",
+    "generatePdf": "PDFを生成",
+    "pdfView": "PDFビュー"
+  },
+  "footer": {
+    "developedBy": "開発者"
+  },
+  "languageSelector": {
+    "placeholder": "言語を選択",
+    "title": "言語"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Configure your profile and invoicing preferences",
+    "save": "Save",
+    "reset": "Reset",
+    "businessInfo": {
+      "title": "Business",
+      "description": "Your company details used as the default sender",
+      "saved": "Business info saved"
+    },
+    "branding": {
+      "title": "Branding",
+      "description": "Customize your invoice appearance",
+      "logo": "Company Logo",
+      "watermark": "Watermark Logo",
+      "brandColor": "Brand Color",
+      "defaultTemplate": "Default Template",
+      "saved": "Branding saved"
+    },
+    "invoiceDefaults": {
+      "title": "Defaults",
+      "description": "Default values for new invoices",
+      "currency": "Default Currency",
+      "language": "Default Language",
+      "numbering": "Numbering",
+      "invoicePrefix": "Invoice Prefix",
+      "nextNumber": "Next Number",
+      "preview": "Preview",
+      "defaultCharges": "Default Charges",
+      "taxRate": "Default Tax Rate",
+      "taxID": "Tax ID",
+      "paymentTerms": "Default Payment Terms",
+      "additionalNotes": "Default Additional Notes",
+      "saved": "Invoice defaults saved"
+    },
+    "paymentInfo": {
+      "title": "Payment",
+      "description": "Default payment details for your invoices",
+      "saved": "Payment info saved"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "ytdRevenue": "Year-to-date revenue",
+    "unpaid": "Unpaid",
+    "overdue": "Overdue",
+    "recentInvoices": "Recent invoices"
+  }
 }

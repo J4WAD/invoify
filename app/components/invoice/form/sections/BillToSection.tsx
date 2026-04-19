@@ -13,14 +13,29 @@ import {
 
 // Contexts
 import { useTranslationContext } from "@/contexts/TranslationContext";
+import { useProfileContext } from "@/contexts/ProfileContext";
 
 // Icons
-import { Plus } from "lucide-react";
+import { Plus, User } from "lucide-react";
 
 const BillToSection = () => {
-    const { control } = useFormContext();
+    const { control, setValue } = useFormContext();
 
     const { _t } = useTranslationContext();
+    const { profile } = useProfileContext();
+    const clients = profile.clients || [];
+
+    const selectClient = (clientId: string) => {
+        const client = clients.find((c) => c.id === clientId);
+        if (!client) return;
+        setValue("receiver.name", client.name);
+        setValue("receiver.address", client.address);
+        setValue("receiver.zipCode", client.zipCode);
+        setValue("receiver.city", client.city);
+        setValue("receiver.country", client.country);
+        setValue("receiver.email", client.email);
+        setValue("receiver.phone", client.phone);
+    };
 
     const CUSTOM_INPUT_NAME = "receiver.customInputs";
 
@@ -43,6 +58,26 @@ const BillToSection = () => {
     return (
         <section className="flex flex-col gap-3">
             <Subheading>{_t("form.steps.fromAndTo.billTo")}:</Subheading>
+            {clients.length > 0 && (
+                <div>
+                    <select
+                        onChange={(e) => {
+                            if (e.target.value) selectClient(e.target.value);
+                        }}
+                        defaultValue=""
+                        className="w-full border rounded-md px-3 py-2 text-sm bg-background"
+                    >
+                        <option value="" disabled>
+                            Selectionner un client enregistre...
+                        </option>
+                        {clients.map((c) => (
+                            <option key={c.id} value={c.id}>
+                                {c.name}{c.city ? ` — ${c.city}` : ""}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            )}
             <FormInput
                 name="receiver.name"
                 label={_t("form.steps.fromAndTo.name")}

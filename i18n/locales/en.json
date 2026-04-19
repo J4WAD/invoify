@@ -1,93 +1,168 @@
 {
-    "form": {
-        "title": "Invoice",
-        "description": "Generate Invoice",
-        "newInvBadge": "New Invoice",
-        "wizard": {
-            "fromAndTo": "From & To",
-            "invoiceDetails": "Invoice Details",
-            "lineItems": "Line Items",
-            "paymentInfo": "Payment Info",
-            "summary": "Summary",
-            "next": "Next",
-            "back": "Back"
+  "documentType": {
+    "selectType": "Document type",
+    "facture": "Invoice",
+    "devis": "Quote",
+    "bon_de_livraison": "Delivery note",
+    "avoir": "Credit note",
+    "bon_de_commande": "Purchase order",
+    "pro_forma": "Pro forma",
+    "bon_de_reception": "Reception receipt"
+  },
+  "form": {
+    "title": "Invoice",
+    "description": "Generate Invoice",
+    "newInvBadge": "New Invoice",
+    "wizard": {
+      "fromAndTo": "From & To",
+      "invoiceDetails": "Invoice Details",
+      "lineItems": "Line Items",
+      "paymentInfo": "Payment Info",
+      "summary": "Summary",
+      "next": "Next",
+      "back": "Back"
+    },
+    "steps": {
+      "fromAndTo": {
+        "billFrom": "Bill From",
+        "billTo": "Bill To",
+        "name": "Name",
+        "address": "Address",
+        "zipCode": "Zip",
+        "city": "City",
+        "country": "Country",
+        "email": "Email",
+        "phone": "Phone",
+        "nif": "NIF",
+        "rc": "RC",
+        "ai": "Tax Article",
+        "nis": "NIS",
+        "addCustomInput": "Add Custom Input",
+        "sender": "Sender",
+        "receiver": "Receiver",
+        "complianceWarning": "Missing fiscal IDs for compliance:"
+      },
+      "invoiceDetails": {
+        "heading": "Invoice Details",
+        "invoiceLogo": {
+          "label": "Invoice Logo",
+          "placeholder": "Click to upload image"
         },
-        "steps": {
-            "fromAndTo": {
-                "billFrom": "Bill From",
-                "billTo": "Bill To",
-                "name": "Name",
-                "address": "Address",
-                "zipCode": "Zip",
-                "city": "City",
-                "country": "Country",
-                "email": "Email",
-                "phone": "Phone",
-                "addCustomInput": "Add Custom Input",
-                "sender": "Sender",
-                "receiver": "Receiver"
-            },
-            "invoiceDetails": {
-                "heading": "Invoice Details",
-                "invoiceLogo": {
-                    "label": "Invoice Logo",
-                    "placeholder": "Click to upload image"
-                },
-                "invoiceNumber": "Invoice Number",
-                "issuedDate": "Issue Date",
-                "dueDate": "Due Date",
-                "currency": "Currency"
-            },
-            "lineItems": {
-                "heading": "Items",
-                "item": "Item",
-                "name": "Name",
-                "quantity": "Quantity",
-                "rate": "Rate",
-                "total": "Total",
-                "description": "Description",
-                "addNewItem": "Add a new item",
-                "removeItem": "Remove item"
-            },
-            "paymentInfo": {
-                "heading": "Payment Information",
-                "bankName": "Bank Name",
-                "accountName": "Account Name",
-                "accountNumber": "Account Number"
-            },
-            "summary": {
-                "heading": "Summary",
-                "signature": {
-                    "heading": "Signature",
-                    "placeholder": "Click to add signature",
-                    "description": "Choose a method to add your signature to the invoice",
-                    "draw": "Draw",
-                    "type": "Type",
-                    "upload": "Upload"
-                },
-                "additionalNotes": "Additional Notes",
-                "paymentTerms": "Payment Terms",
-                "discount": "Discount",
-                "tax": "Tax",
-                "shipping": "Shipping",
-                "subTotal": "Subtotal",
-                "totalAmount": "Total Amount",
-                "includeTotalInWords": "Include Total in Words?",
-                "yes": "Yes",
-                "no": "No"
-            }
+        "invoiceNumber": "Invoice Number",
+        "issuedDate": "Issue Date",
+        "dueDate": "Due Date",
+        "currency": "Currency",
+        "brandColor": "Brand Color",
+        "devisValidity": "Quote validity",
+        "taxRegime": {
+          "label": "Tax Regime",
+          "ASSUJETTI_TVA": "VAT Registered",
+          "DISPENSE_IFU": "IFU Exempt (Art. 282 ter)",
+          "EXONERE": "VAT Exempt"
         }
-    },
-    "actions": {
-        "title": "Actions",
-        "description": "Operations and preview",
-        "loadInvoice": "Load Invoice",
-        "exportInvoice": "Export Invoice",
-        "newInvoice": "New Invoice",
-        "generatePdf": "Generate PDF",
-        "pdfView": "PDF View"
-    },
-    "footer": {
-        "developedBy": "Developed by"
+      },
+      "lineItems": {
+        "heading": "Items",
+        "item": "Item",
+        "name": "Name",
+        "quantity": "Quantity",
+        "rate": "Rate",
+        "total": "Total",
+        "description": "Description",
+        "addNewItem": "Add a new item",
+        "removeItem": "Remove item"
+      },
+      "paymentInfo": {
+        "heading": "Payment Information",
+        "bankName": "Bank Name",
+        "accountName": "Account Name",
+        "accountNumber": "Account Number"
+      },
+      "summary": {
+        "heading": "Summary",
+        "signature": {
+          "heading": "Signature",
+          "placeholder": "Click to add signature",
+          "description": "Choose a method to add your signature to the invoice",
+          "draw": "Draw",
+          "type": "Type",
+          "upload": "Upload"
+        },
+        "additionalNotes": "Additional Notes",
+        "paymentTerms": "Payment Terms",
+        "discount": "Discount",
+        "tax": "Tax",
+        "shipping": "Shipping",
+        "subTotal": "Subtotal",
+        "totalAmount": "Total Amount",
+        "includeTotalInWords": "Include Total in Words?",
+        "yes": "Yes",
+        "no": "No"
+      }
     }
+  },
+  "actions": {
+    "title": "Actions",
+    "description": "Operations and preview",
+    "loadInvoice": "Load Invoice",
+    "exportInvoice": "Export Invoice",
+    "newInvoice": "New Invoice",
+    "generatePdf": "Generate PDF",
+    "pdfView": "PDF View"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Configure your profile and invoicing preferences",
+    "save": "Save",
+    "reset": "Reset",
+    "businessInfo": {
+      "title": "Business",
+      "description": "Your company details used as the default sender",
+      "saved": "Business info saved"
+    },
+    "branding": {
+      "title": "Branding",
+      "description": "Customize your invoice appearance",
+      "logo": "Company Logo",
+      "watermark": "Watermark Logo",
+      "brandColor": "Brand Color",
+      "defaultTemplate": "Default Template",
+      "saved": "Branding saved"
+    },
+    "invoiceDefaults": {
+      "title": "Defaults",
+      "description": "Default values for new invoices",
+      "currency": "Default Currency",
+      "language": "Default Language",
+      "numbering": "Numbering",
+      "invoicePrefix": "Invoice Prefix",
+      "nextNumber": "Next Number",
+      "preview": "Preview",
+      "defaultCharges": "Default Charges",
+      "taxRate": "Default Tax Rate",
+      "taxID": "Tax ID",
+      "paymentTerms": "Default Payment Terms",
+      "additionalNotes": "Default Additional Notes",
+      "saved": "Invoice defaults saved"
+    },
+    "paymentInfo": {
+      "title": "Payment",
+      "description": "Default payment details for your invoices",
+      "saved": "Payment info saved"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "ytdRevenue": "Year-to-date revenue",
+    "unpaid": "Unpaid",
+    "overdue": "Overdue",
+    "recentInvoices": "Recent invoices"
+  },
+  "footer": {
+    "developedBy": "Developed by"
+  },
+  "languageSelector": {
+    "placeholder": "Select a language",
+    "title": "Languages"
+  }
 }

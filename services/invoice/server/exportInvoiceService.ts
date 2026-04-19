@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
+// Logger
+import { logger } from "@/lib/logger";
+
 // JSON2CSV
 import { AsyncParser } from "@json2csv/node";
 
@@ -86,7 +89,7 @@ export async function exportInvoiceService(req: NextRequest) {
             //     });
         }
     } catch (error) {
-        console.error(error);
+        logger.error({ err: error }, "export invoice failed");
 
         // Return an error response
         return new Response(`Error exporting: \n${error}`, {

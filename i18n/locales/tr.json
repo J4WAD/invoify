@@ -1,4 +1,14 @@
 {
+  "documentType": {
+    "selectType": "Belge türü",
+    "facture": "Fatura",
+    "devis": "Teklif",
+    "bon_de_livraison": "İrsaliye",
+    "avoir": "Kredi notu",
+    "bon_de_commande": "Sipariş",
+    "pro_forma": "Pro forma",
+    "bon_de_reception": "Teslimat alındı"
+  },
   "form": {
     "title": "Fatura",
     "description": "Fatura Oluştur",
@@ -23,9 +33,14 @@
         "country": "Ülke",
         "email": "E-posta",
         "phone": "Telefon",
+        "nif": "NIF",
+        "rc": "RC",
+        "ai": "Vergi maddesi",
+        "nis": "NIS",
         "addCustomInput": "Özel Alan Ekle",
         "sender": "Gönderici",
-        "receiver": "Alıcı"
+        "receiver": "Alıcı",
+        "complianceWarning": "Uyumluluk için vergi kimlikleri eksik:"
       },
       "invoiceDetails": {
         "heading": "Fatura Detayları",
@@ -36,7 +51,15 @@
         "invoiceNumber": "Fatura Numarası",
         "issuedDate": "Düzenlenme Tarihi",
         "dueDate": "Son Ödeme Tarihi",
-        "currency": "Para Birimi"
+        "currency": "Para Birimi",
+        "brandColor": "Marka rengi",
+        "devisValidity": "Teklif geçerlilik süresi",
+        "taxRegime": {
+          "label": "Vergi rejimi",
+          "ASSUJETTI_TVA": "KDV mükellefi",
+          "DISPENSE_IFU": "IFU muaf (Md. 282 ter)",
+          "EXONERE": "KDV'den muaf"
+        }
       },
       "lineItems": {
         "heading": "Hizmetler",
@@ -89,5 +112,57 @@
   },
   "footer": {
     "developedBy": "Oluşturan"
+  },
+  "languageSelector": {
+    "placeholder": "Bir dil seçin",
+    "title": "Diller"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Configure your profile and invoicing preferences",
+    "save": "Save",
+    "reset": "Reset",
+    "businessInfo": {
+      "title": "Business",
+      "description": "Your company details used as the default sender",
+      "saved": "Business info saved"
+    },
+    "branding": {
+      "title": "Branding",
+      "description": "Customize your invoice appearance",
+      "logo": "Company Logo",
+      "watermark": "Watermark Logo",
+      "brandColor": "Brand Color",
+      "defaultTemplate": "Default Template",
+      "saved": "Branding saved"
+    },
+    "invoiceDefaults": {
+      "title": "Defaults",
+      "description": "Default values for new invoices",
+      "currency": "Default Currency",
+      "language": "Default Language",
+      "numbering": "Numbering",
+      "invoicePrefix": "Invoice Prefix",
+      "nextNumber": "Next Number",
+      "preview": "Preview",
+      "defaultCharges": "Default Charges",
+      "taxRate": "Default Tax Rate",
+      "taxID": "Tax ID",
+      "paymentTerms": "Default Payment Terms",
+      "additionalNotes": "Default Additional Notes",
+      "saved": "Invoice defaults saved"
+    },
+    "paymentInfo": {
+      "title": "Payment",
+      "description": "Default payment details for your invoices",
+      "saved": "Payment info saved"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "ytdRevenue": "Year-to-date revenue",
+    "unpaid": "Unpaid",
+    "overdue": "Overdue",
+    "recentInvoices": "Recent invoices"
   }
 }

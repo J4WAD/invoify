@@ -1,3 +1,5 @@
+"use client";
+
 import { useMemo } from "react";
 
 // Next
@@ -5,15 +7,22 @@ import Link from "next/link";
 import Image from "next/image";
 
 // Assets
-import Logo from "@/public/assets/img/invoify-logo.svg";
+import Logo from "@/public/assets/logottype.png";
 
 // ShadCn
 import { Card } from "@/components/ui/card";
 
 // Components
-import { DevDebug, LanguageSelector, ThemeSwitcher } from "@/app/components";
+import { BaseButton, DevDebug, LanguageSelector, SettingsModal, ThemeSwitcher } from "@/app/components";
+
+// Context
+import { useTranslationContext } from "@/contexts/TranslationContext";
+
+// Icons
+import { FileStack, LayoutDashboard, Settings, Users } from "lucide-react";
 
 const BaseNavbar = () => {
+    const { _t } = useTranslationContext();
     const devEnv = useMemo(() => {
         return process.env.NODE_ENV === "development";
     }, []);
@@ -25,17 +34,61 @@ const BaseNavbar = () => {
                     <Link href={"/"}>
                         <Image
                             src={Logo}
-                            alt="Invoify Logo"
-                            width={190}
-                            height={100}
+                            alt="FacturApp Logo"
+                            width={240}
+                            height={120}
                             loading="eager"
                             style={{ height: "auto" }}
                         />
                     </Link>
                     {/* ? DEV Only */}
                     {devEnv && <DevDebug />}
-                    <LanguageSelector />
-                    <ThemeSwitcher />
+                    <div className="flex items-center gap-1">
+                        <Link href="/dashboard">
+                            <BaseButton
+                                variant="ghost"
+                                size="sm"
+                                tooltipLabel={_t("dashboard.title")}
+                                className="gap-1.5"
+                            >
+                                <LayoutDashboard className="h-[1.2rem] w-[1.2rem]" />
+                                <span className="hidden sm:inline text-sm">{_t("dashboard.title")}</span>
+                            </BaseButton>
+                        </Link>
+                        <Link href="/invoices">
+                            <BaseButton
+                                variant="ghost"
+                                size="sm"
+                                tooltipLabel="Mes factures"
+                                className="gap-1.5"
+                            >
+                                <FileStack className="h-[1.2rem] w-[1.2rem]" />
+                                <span className="hidden sm:inline text-sm">Factures</span>
+                            </BaseButton>
+                        </Link>
+                        <Link href="/clients">
+                            <BaseButton
+                                variant="ghost"
+                                size="sm"
+                                tooltipLabel="Mes clients"
+                                className="gap-1.5"
+                            >
+                                <Users className="h-[1.2rem] w-[1.2rem]" />
+                                <span className="hidden sm:inline text-sm">Clients</span>
+                            </BaseButton>
+                        </Link>
+                        <LanguageSelector />
+                        <SettingsModal>
+                            <BaseButton
+                                variant="ghost"
+                                size="icon"
+                                tooltipLabel={_t("settings.title")}
+                            >
+                                <Settings className="h-[1.2rem] w-[1.2rem]" />
+                            </BaseButton>
+                        </SettingsModal>
+                        <ThemeSwitcher />
+                    </div>
                 </Card>
             </nav>
         </header>

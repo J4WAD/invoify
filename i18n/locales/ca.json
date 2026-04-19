@@ -1,93 +1,168 @@
 {
-	"form": {
-		"title": "Factura",
-		"description": "Generar Factura",
-		"newInvBadge": "Nova Factura",
-		"wizard": {
-			"fromAndTo": "De qui & Per a qui",
-			"invoiceDetails": "Detalls factura",
-			"lineItems": "Items",
-			"paymentInfo": "Informació de Pagament",
-			"summary": "Sumari",
-			"next": "Sigüent",
-			"back": "Enrere"
-		},
-		"steps": {
-			"fromAndTo": {
-				"billFrom": "Factura de",
-				"billTo": "Factura per a",
-				"name": "Nom",
-				"address": "Direcció",
-				"zipCode": "Codi postal",
-				"city": "Ciutat",
-				"country": "Païs",
-				"email": "Email",
-				"phone": "Teléfon",
-				"addCustomInput": "Afegir entrada personalizada",
-				"sender": "Remitent",
-				"receiver": "Receptor"
-			},
-			"invoiceDetails": {
-				"heading": "Detalls de factura",
-				"invoiceLogo": {
-					"label": "Logo de factura",
-					"placeholder": "Click para pujar una imagen"
-				},
-				"invoiceNumber": "Número de factura",
-				"issuedDate": "Data d’emisión",
-				"dueDate": "Data de vencimient",
-				"currency": "Divisa"
-			},
-			"lineItems": {
-				"heading": "Items",
-				"item": "Item",
-				"name": "Nom",
-				"quantity": "Quantitat",
-				"rate": "Tarifa",
-				"total": "Total",
-				"description": "Descripció",
-				"addNewItem": "Afegir nou item",
-				"removeItem": "Eliminar item"
-			},
-			"paymentInfo": {
-				"heading": "Informació de pagament",
-				"bankName": "Nom del banc",
-				"accountName": "Nom del compte",
-				"accountNumber": "Número del compte"
-			},
-			"summary": {
-				"heading": "Sumari",
-				"signature": {
-					"heading": "Firma",
-					"placeholder": "Click para afegir una firma",
-					"description": "Tria un mètode per afegir la teva firma a la factura",
-					"draw": "Dibuixar",
-					"type": "Escriure",
-					"upload": "Pujar"
-				},
-				"additionalNotes": "Notes adicionals",
-				"paymentTerms": "Condicions de pagament",
-				"discount": "Descompte",
-				"tax": "Impost",
-				"shipping": "Enviament",
-				"subTotal": "Subtotal",
-				"totalAmount": "Import total",
-				"includeTotalInWords": "Incluir el total en paraules?",
-				"yes": "Sí",
-				"no": "No"
-			}
-		}
-	},
-	"actions": {
-		"title": "Accions",
-		"description": "Operacions i vista prèvia",
-		"loadInvoice": "Carregar Factura",
-		"exportInvoice": "Exportar Factura",
-		"newInvoice": "Nova Factura",
-		"generatePdf": "Generar PDF",
-		"pdfView": "Veure PDF"
-	},
-	"footer": {
-		"developedBy": "Desenvolupat per"
-	}
+  "documentType": {
+    "selectType": "Tipus de document",
+    "facture": "Factura",
+    "devis": "Pressupost",
+    "bon_de_livraison": "Albarà",
+    "avoir": "Nota de crèdit",
+    "bon_de_commande": "Comanda",
+    "pro_forma": "Pro forma",
+    "bon_de_reception": "Bon de recepció"
+  },
+  "form": {
+    "title": "Factura",
+    "description": "Generar Factura",
+    "newInvBadge": "Nova Factura",
+    "wizard": {
+      "fromAndTo": "De qui & Per a qui",
+      "invoiceDetails": "Detalls factura",
+      "lineItems": "Items",
+      "paymentInfo": "Informació de Pagament",
+      "summary": "Sumari",
+      "next": "Sigüent",
+      "back": "Enrere"
+    },
+    "steps": {
+      "fromAndTo": {
+        "billFrom": "Factura de",
+        "billTo": "Factura per a",
+        "name": "Nom",
+        "address": "Direcció",
+        "zipCode": "Codi postal",
+        "city": "Ciutat",
+        "country": "Païs",
+        "email": "Email",
+        "phone": "Teléfon",
+        "nif": "NIF",
+        "rc": "RC",
+        "ai": "Article d'imposició",
+        "nis": "NIS",
+        "addCustomInput": "Afegir entrada personalizada",
+        "sender": "Remitent",
+        "receiver": "Receptor",
+        "complianceWarning": "ID fiscals manquen per al compliment:"
+      },
+      "invoiceDetails": {
+        "heading": "Detalls de factura",
+        "invoiceLogo": {
+          "label": "Logo de factura",
+          "placeholder": "Click para pujar una imagen"
+        },
+        "invoiceNumber": "Número de factura",
+        "issuedDate": "Data d’emisión",
+        "dueDate": "Data de vencimient",
+        "currency": "Divisa",
+        "brandColor": "Color de marca",
+        "devisValidity": "Validesa de l'oferta",
+        "taxRegime": {
+          "label": "Règim fiscal",
+          "ASSUJETTI_TVA": "Subjecte a IVA",
+          "DISPENSE_IFU": "Exempt IFU (Art. 282 ter)",
+          "EXONERE": "Exempt d'IVA"
+        }
+      },
+      "lineItems": {
+        "heading": "Items",
+        "item": "Item",
+        "name": "Nom",
+        "quantity": "Quantitat",
+        "rate": "Tarifa",
+        "total": "Total",
+        "description": "Descripció",
+        "addNewItem": "Afegir nou item",
+        "removeItem": "Eliminar item"
+      },
+      "paymentInfo": {
+        "heading": "Informació de pagament",
+        "bankName": "Nom del banc",
+        "accountName": "Nom del compte",
+        "accountNumber": "Número del compte"
+      },
+      "summary": {
+        "heading": "Sumari",
+        "signature": {
+          "heading": "Firma",
+          "placeholder": "Click para afegir una firma",
+          "description": "Tria un mètode per afegir la teva firma a la factura",
+          "draw": "Dibuixar",
+          "type": "Escriure",
+          "upload": "Pujar"
+        },
+        "additionalNotes": "Notes adicionals",
+        "paymentTerms": "Condicions de pagament",
+        "discount": "Descompte",
+        "tax": "Impost",
+        "shipping": "Enviament",
+        "subTotal": "Subtotal",
+        "totalAmount": "Import total",
+        "includeTotalInWords": "Incluir el total en paraules?",
+        "yes": "Sí",
+        "no": "No"
+      }
+    }
+  },
+  "actions": {
+    "title": "Accions",
+    "description": "Operacions i vista prèvia",
+    "loadInvoice": "Carregar Factura",
+    "exportInvoice": "Exportar Factura",
+    "newInvoice": "Nova Factura",
+    "generatePdf": "Generar PDF",
+    "pdfView": "Veure PDF"
+  },
+  "footer": {
+    "developedBy": "Desenvolupat per"
+  },
+  "languageSelector": {
+    "placeholder": "Selecciona un idioma",
+    "title": "Idiomes"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Configure your profile and invoicing preferences",
+    "save": "Save",
+    "reset": "Reset",
+    "businessInfo": {
+      "title": "Business",
+      "description": "Your company details used as the default sender",
+      "saved": "Business info saved"
+    },
+    "branding": {
+      "title": "Branding",
+      "description": "Customize your invoice appearance",
+      "logo": "Company Logo",
+      "watermark": "Watermark Logo",
+      "brandColor": "Brand Color",
+      "defaultTemplate": "Default Template",
+      "saved": "Branding saved"
+    },
+    "invoiceDefaults": {
+      "title": "Defaults",
+      "description": "Default values for new invoices",
+      "currency": "Default Currency",
+      "language": "Default Language",
+      "numbering": "Numbering",
+      "invoicePrefix": "Invoice Prefix",
+      "nextNumber": "Next Number",
+      "preview": "Preview",
+      "defaultCharges": "Default Charges",
+      "taxRate": "Default Tax Rate",
+      "taxID": "Tax ID",
+      "paymentTerms": "Default Payment Terms",
+      "additionalNotes": "Default Additional Notes",
+      "saved": "Invoice defaults saved"
+    },
+    "paymentInfo": {
+      "title": "Payment",
+      "description": "Default payment details for your invoices",
+      "saved": "Payment info saved"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "ytdRevenue": "Year-to-date revenue",
+    "unpaid": "Unpaid",
+    "overdue": "Overdue",
+    "recentInvoices": "Recent invoices"
+  }
 }

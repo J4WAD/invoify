@@ -9,9 +9,9 @@ export const ENV = process.env.NODE_ENV;
 /**
  * Websites
  */
-export const BASE_URL = "https://invoify.vercel.app";
-export const AUTHOR_WEBSITE = "https://aliabb.vercel.app";
-export const AUTHOR_GITHUB = "https://github.com/al1abb";
+export const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://facturapp.vercel.app";
+export const AUTHOR_WEBSITE = process.env.NEXT_PUBLIC_AUTHOR_WEBSITE ?? "https://siferone.com";
+export const AUTHOR_GITHUB = "https://siferone.com";
 
 /**
  * API endpoints
@@ -29,7 +29,10 @@ export const CURRENCIES_API =
 /**
  * Local storage
  */
-export const LOCAL_STORAGE_INVOICE_DRAFT_KEY = "invoify:invoiceDraft";
+export const LOCAL_STORAGE_INVOICE_DRAFT_KEY = "facturapp:invoiceDraft";
+export const LOCAL_STORAGE_PROFILE_KEY = "facturapp:profile";
+export const LOCAL_STORAGE_SAVED_INVOICES_KEY = "facturapp:savedInvoices";
+export const LEGACY_LOCAL_STORAGE_SAVED_INVOICES_KEY = "savedInvoices";
 
 /**
  * Tailwind
@@ -52,13 +55,13 @@ export const NODEMAILER_PW = process.env.NODEMAILER_PW;
  * I18N
  */
 export const LOCALES = [
+  { code: "fr", name: "Français" },
   { code: "en", name: "English" },
+  { code: "ar", name: "العربية" },
   { code: "de", name: "Deutsch" },
   { code: "it", name: "Italiano" },
   { code: "es", name: "Español" },
   { code: "ca", name: "Català" },
-  { code: "fr", name: "Français" },
-  { code: "ar", name: "العربية" },
   { code: "pl", name: "Polish" },
   { code: "pt-BR", name: "Português (Brasil)" },
   { code: "tr", name: "Türkçe" },
@@ -67,7 +70,7 @@ export const LOCALES = [
   { code: "nb-NO", name: "Norwegian (bokmål)" },
   { code: "nn-NO", name: "Norwegian (nynorsk)" },
 ];
-export const DEFAULT_LOCALE = LOCALES[0].code;
+export const DEFAULT_LOCALE = LOCALES[0].code; // "fr"
 
 /**
  * Signature variables
@@ -126,6 +129,10 @@ export const FORM_DEFAULT_VALUES = {
     email: "",
     phone: "",
     customInputs: [],
+    nif: "",
+    rc: "",
+    ai: "",
+    nis: "",
   },
   receiver: {
     name: "",
@@ -136,8 +143,13 @@ export const FORM_DEFAULT_VALUES = {
     email: "",
     phone: "",
     customInputs: [],
+    nif: "",
+    nis: "",
+    rc:  "",
+    ai:  "",
   },
   details: {
+    documentType: "facture" as const,
     invoiceLogo: "",
     invoiceNumber: "",
     invoiceDate: "",
@@ -151,8 +163,11 @@ export const FORM_DEFAULT_VALUES = {
         total: 0,
       },
     ],
-    currency: "USD",
-    language: "English",
+    currency: "DZD",
+    language: "French",
+    brandColor: "#2563eb",
+    watermarkImage: "",
+    devisValidity: "",
     taxDetails: {
       amount: 0,
       amountType: "amount",
@@ -171,10 +186,13 @@ export const FORM_DEFAULT_VALUES = {
       accountName: "",
       accountNumber: "",
     },
+    status: "draft" as const,
     additionalNotes: "",
     paymentTerms: "",
     totalAmountInWords: "",
     pdfTemplate: 1,
+    taxRegime: "ASSUJETTI_TVA" as const,
+    referencesInvoiceNumber: "",
   },
 };
 

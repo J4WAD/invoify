@@ -3,6 +3,7 @@
    ========================= */
 import BaseNavbar from "./layout/BaseNavbar";
 import BaseFooter from "./layout/BaseFooter";
+import OfflineIndicator from "./layout/OfflineIndicator";
 
 /* =========================
    * Invoice
@@ -33,6 +34,7 @@ import Items from "./invoice/form/sections/Items";
 import PaymentInformation from "./invoice/form/sections/PaymentInformation";
 import InvoiceSummary from "./invoice/form/sections/InvoiceSummary";
 import ImportJsonButton from "./invoice/form/sections/ImportJsonButton";
+import DocumentTypeSelector from "./invoice/form/sections/DocumentTypeSelector";
 
 // * Actions
 import PdfViewer from "./invoice/actions/PdfViewer";
@@ -48,6 +50,7 @@ import DatePickerFormField from "./reusables/form-fields/DatePickerFormField";
 import FormFile from "./reusables/form-fields/FormFile";
 import ChargeInput from "./reusables/form-fields/ChargeInput";
 import FormCustomInput from "./reusables/form-fields/FormCustomInput";
+import ColorInput from "./reusables/form-fields/ColorInput";
 
 import BaseButton from "./reusables/BaseButton";
 import ThemeSwitcher from "./reusables/ThemeSwitcher";
@@ -78,6 +81,9 @@ import UploadSignature from "./modals/signature/tabs/UploadSignature";
 import SignatureColorSelector from "./modals/signature/components/SignatureColorSelector";
 import SignatureFontSelector from "./modals/signature/components/SignatureFontSelector";
 
+// Settings
+import SettingsModal from "./modals/settings/SettingsModal";
+
 // Alerts
 import NewInvoiceAlert from "./modals/alerts/NewInvoiceAlert";
 
@@ -89,6 +95,7 @@ import DynamicInvoiceTemplate from "./templates/invoice-pdf/DynamicInvoiceTempla
 import InvoiceLayout from "./templates/invoice-pdf/InvoiceLayout";
 import InvoiceTemplate1 from "./templates/invoice-pdf/InvoiceTemplate1";
 import InvoiceTemplate2 from "./templates/invoice-pdf/InvoiceTemplate2";
+import InvoiceTemplate3 from "./templates/invoice-pdf/InvoiceTemplate3";
 
 // Email templates
 import SendPdfEmail from "./templates/email/SendPdfEmail";
@@ -101,6 +108,7 @@ import DevDebug from "./dev/DevDebug";
 export {
     BaseNavbar,
     BaseFooter,
+    OfflineIndicator,
     InvoiceMain,
     InvoiceForm,
     InvoiceActions,
@@ -127,6 +135,7 @@ export {
     FormFile,
     ChargeInput,
     FormCustomInput,
+    ColorInput,
     BaseButton,
     ThemeSwitcher,
     LanguageSelector,
@@ -135,17 +144,20 @@ export {
     InvoiceLoaderModal,
     InvoiceExportModal,
     ImportJsonButton,
+    DocumentTypeSelector,
     SignatureModal,
     DrawSignature,
     TypeSignature,
     UploadSignature,
     SignatureColorSelector,
     SignatureFontSelector,
+    SettingsModal,
     NewInvoiceAlert,
     DynamicInvoiceTemplate,
     InvoiceLayout,
     InvoiceTemplate1,
     InvoiceTemplate2,
+    InvoiceTemplate3,
     SendPdfEmail,
     DevDebug,
 };

@@ -1,0 +1,191 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ── Enums ───────────────────────────────────────────────────────────────────
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum TaxRegime {
+  ASSUJETTI_TVA
+  DISPENSE_IFU
+  EXONERE
+}
+
+enum DocumentType {
+  FACTURE
+  DEVIS
+  BON_DE_LIVRAISON
+  AVOIR
+  BON_DE_COMMANDE
+  PRO_FORMA
+  BON_DE_RECEPTION
+}
+
+enum InvoiceStatus {
+  DRAFT
+  ISSUED
+  SENT
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+// ── Models ──────────────────────────────────────────────────────────────────
+
+model User {
+  id           String    @id @default(cuid())
+  username     String    @unique
+  email        String?   @unique
+  passwordHash String
+  role         Role      @default(USER)
+  failedLogins Int       @default(0)
+  lockedUntil  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  profile             Profile?
+  invoices            Invoice[]
+  auditLogs           InvoiceAuditLog[]
+  passwordResetTokens PasswordResetToken[]
+}
+
+model Profile {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name         String    @default("")
+  address      String    @default("")
+  zipCode      String    @default("")
+  city         String    @default("")
+  country      String    @default("")
+  email        String    @default("")
+  phone        String    @default("")
+  nif          String    @default("")
+  nis          String    @default("")
+  rc           String    @default("")
+  ai           String    @default("")
+  taxRegime    TaxRegime @default(ASSUJETTI_TVA)
+  customInputs Json      @default("[]")
+
+  logo            String?   @db.Text
+  watermarkLogo   String?   @db.Text
+  brandColor      String    @default("#2563eb")
+  defaultTemplate Int       @default(1)
+
+  currency               String @default("DZD")
+  language               String @default("French")
+  invoiceNumberPrefix    String @default("FACT")
+  nextInvoiceNumber      Int    @default(1)
+  documentCounters       Json   @default("{\"facture\":1,\"devis\":1,\"bon_de_livraison\":1,\"avoir\":1,\"bon_de_commande\":1,\"pro_forma\":1,\"bon_de_reception\":1}")
+  defaultTaxRate         Float  @default(0)
+  defaultTaxType         String @default("amount")
+  defaultTaxID           String @default("")
+  defaultDiscountRate    Float  @default(0)
+  defaultDiscountType    String @default("amount")
+  defaultShippingCost    Float  @default(0)
+  defaultShippingType    String @default("amount")
+  defaultPaymentTerms    String @default("")
+  defaultAdditionalNotes String @default("")
+
+  bankName      String @default("")
+  accountName   String @default("")
+  accountNumber String @default("")
+
+  clients   Client[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Client {
+  id        String  @id @default(cuid())
+  profileId String
+  profile   Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  name    String
+  address String @default("")
+  zipCode String @default("")
+  city    String @default("")
+  country String @default("")
+  email   String @default("")
+  phone   String @default("")
+
+  invoices  Invoice[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Invoice {
+  id       String  @id @default(cuid())
+  userId   String
+  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clientId String?
+  client   Client? @relation(fields: [clientId], references: [id])
+
+  documentType   DocumentType
+  sequenceYear   Int
+  sequenceNumber Int
+  number         String
+  status         InvoiceStatus @default(DRAFT)
+
+  payload            Json
+  totalTtc           Decimal  @db.Decimal(14, 2)
+  currency           String   @default("DZD")
+  totalAmountInWords String?
+
+  pdfStorageKey String?
+
+  referencesInvoiceId String?
+  referencedInvoice   Invoice?  @relation("CreditNote", fields: [referencesInvoiceId], references: [id])
+  creditNotes         Invoice[] @relation("CreditNote")
+
+  issuedAt  DateTime?
+  paidAt    DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  auditLogs InvoiceAuditLog[]
+
+  @@unique([userId, documentType, sequenceYear, sequenceNumber])
+}
+
+model InvoiceAuditLog {
+  id        String  @id @default(cuid())
+  invoiceId String
+  invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
+  action    String
+  diff      Json?
+  createdAt DateTime @default(now())
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+}
+
+model EmailLog {
+  id         String   @id @default(cuid())
+  userId     String
+  invoiceId  String?
+  to         String
+  subject    String
+  status     String   @default("sent")  // sent | failed | bounced
+  providerId String?                    // Resend message ID
+  error      String?
+  createdAt  DateTime @default(now())
+}

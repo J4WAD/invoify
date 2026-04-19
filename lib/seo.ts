@@ -1,29 +1,31 @@
 import { AUTHOR_WEBSITE, BASE_URL } from "@/lib/variables";
 
 export const ROOTKEYWORDS = [
-    "invoice",
+    "facture",
+    "générateur de facture",
+    "facture algérie",
+    "facture DZD",
+    "auto-entrepreneur algérie",
     "invoice generator",
-    "invoice generating",
-    "invoice app",
-    "invoice generator app",
+    "facturapp",
     "free invoice generator",
 ];
 
 export const JSONLD = {
     "@context": "https://schema.org",
     "@type": "Website",
-    name: "Invoify",
-    description: "An Invoice Generator Web App",
+    name: "FacturApp",
+    description: "Générateur de factures professionnel — personnalisable, gratuit et rapide",
     keywords: ROOTKEYWORDS,
     url: BASE_URL,
-    image: "https://invoify.vercel.app/_next/static/media/invoify-logo.7ef8fa33.svg",
+    image: `${BASE_URL}/assets/img/facturapp-logo.svg`,
     mainEntityOfPage: {
         "@type": "WebPage",
         "@id": `${BASE_URL}/#website`,
     },
     author: {
         "@type": "Person",
-        name: "Ali Abbasov",
+        name: "Djaouad Azzouz",
         url: AUTHOR_WEBSITE,
     },
     "@graph": [

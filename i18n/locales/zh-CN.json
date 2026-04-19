@@ -1,93 +1,168 @@
 {
-    "form": {
-        "title": "发票",
-        "description": "创建发票",
-        "newInvBadge": "新发票",
-        "wizard": {
-            "fromAndTo": "发件人 & 收件人",
-            "invoiceDetails": "发票详情",
-            "lineItems": "项目明细",
-            "paymentInfo": "支付信息",
-            "summary": "摘要",
-            "next": "下一步",
-            "back": "返回"
+  "documentType": {
+    "selectType": "文档类型",
+    "facture": "发票",
+    "devis": "报价单",
+    "bon_de_livraison": "送货单",
+    "avoir": "贷方通知单",
+    "bon_de_commande": "订购单",
+    "pro_forma": "形式发票",
+    "bon_de_reception": "收货单"
+  },
+  "form": {
+    "title": "发票",
+    "description": "创建发票",
+    "newInvBadge": "新发票",
+    "wizard": {
+      "fromAndTo": "发件人 & 收件人",
+      "invoiceDetails": "发票详情",
+      "lineItems": "项目明细",
+      "paymentInfo": "支付信息",
+      "summary": "摘要",
+      "next": "下一步",
+      "back": "返回"
+    },
+    "steps": {
+      "fromAndTo": {
+        "billFrom": "开票方",
+        "billTo": "收票方",
+        "name": "名称",
+        "address": "地址",
+        "zipCode": "邮编",
+        "city": "城市",
+        "country": "国家",
+        "email": "邮箱",
+        "phone": "电话",
+        "nif": "NIF",
+        "rc": "RC",
+        "ai": "税务条款",
+        "nis": "NIS",
+        "addCustomInput": "添加自定义输入",
+        "sender": "发件人",
+        "receiver": "收件人",
+        "complianceWarning": "缺少合规所需的税务标识符："
+      },
+      "invoiceDetails": {
+        "heading": "发票详情",
+        "invoiceLogo": {
+          "label": "发票Logo",
+          "placeholder": "点击上传图片"
         },
-        "steps": {
-            "fromAndTo": {
-                "billFrom": "开票方",
-                "billTo": "收票方",
-                "name": "名称",
-                "address": "地址",
-                "zipCode": "邮编",
-                "city": "城市",
-                "country": "国家",
-                "email": "邮箱",
-                "phone": "电话",
-                "addCustomInput": "添加自定义输入",
-                "sender": "发件人",
-                "receiver": "收件人"
-            },
-            "invoiceDetails": {
-                "heading": "发票详情",
-                "invoiceLogo": {
-                    "label": "发票Logo",
-                    "placeholder": "点击上传图片"
-                },
-                "invoiceNumber": "发票编号",
-                "issuedDate": "开票日期",
-                "dueDate": "付款截止日",
-                "currency": "货币"
-            },
-            "lineItems": {
-                "heading": "项目明细",
-                "item": "项目",
-                "name": "名称",
-                "quantity": "数量",
-                "rate": "单价",
-                "total": "总价",
-                "description": "描述",
-                "addNewItem": "添加新项目",
-                "removeItem": "删除项目"
-            },
-            "paymentInfo": {
-                "heading": "支付信息",
-                "bankName": "银行名称",
-                "accountName": "账户名",
-                "accountNumber": "账号"
-            },
-            "summary": {
-                "heading": "摘要",
-                "signature": {
-                    "heading": "签名",
-                    "placeholder": "点击添加签名",
-                    "description": "选择一种方法为发票添加签名",
-                    "draw": "手写",
-                    "type": "输入",
-                    "upload": "上传"
-                },
-                "additionalNotes": "附加说明",
-                "paymentTerms": "付款条款",
-                "discount": "折扣",
-                "tax": "税费",
-                "shipping": "运费",
-                "subTotal": "小计",
-                "totalAmount": "总金额",
-                "includeTotalInWords": "用文字显示总金额？",
-                "yes": "是",
-                "no": "否"
-            }
+        "invoiceNumber": "发票编号",
+        "issuedDate": "开票日期",
+        "dueDate": "付款截止日",
+        "currency": "货币",
+        "brandColor": "品牌颜色",
+        "devisValidity": "报价有效期",
+        "taxRegime": {
+          "label": "税务制度",
+          "ASSUJETTI_TVA": "增值税一般纳税人",
+          "DISPENSE_IFU": "IFU豁免 (第282 ter条)",
+          "EXONERE": "增值税免税"
         }
-    },
-    "actions": {
-        "title": "操作",
-        "description": "处理与预览",
-        "loadInvoice": "加载发票",
-        "exportInvoice": "导出发票",
-        "newInvoice": "新建发票",
-        "generatePdf": "生成PDF",
-        "pdfView": "PDF视图"
-    },
-    "footer": {
-        "developedBy": "开发人员"
+      },
+      "lineItems": {
+        "heading": "项目明细",
+        "item": "项目",
+        "name": "名称",
+        "quantity": "数量",
+        "rate": "单价",
+        "total": "总价",
+        "description": "描述",
+        "addNewItem": "添加新项目",
+        "removeItem": "删除项目"
+      },
+      "paymentInfo": {
+        "heading": "支付信息",
+        "bankName": "银行名称",
+        "accountName": "账户名",
+        "accountNumber": "账号"
+      },
+      "summary": {
+        "heading": "摘要",
+        "signature": {
+          "heading": "签名",
+          "placeholder": "点击添加签名",
+          "description": "选择一种方法为发票添加签名",
+          "draw": "手写",
+          "type": "输入",
+          "upload": "上传"
+        },
+        "additionalNotes": "附加说明",
+        "paymentTerms": "付款条款",
+        "discount": "折扣",
+        "tax": "税费",
+        "shipping": "运费",
+        "subTotal": "小计",
+        "totalAmount": "总金额",
+        "includeTotalInWords": "用文字显示总金额？",
+        "yes": "是",
+        "no": "否"
+      }
     }
+  },
+  "actions": {
+    "title": "操作",
+    "description": "处理与预览",
+    "loadInvoice": "加载发票",
+    "exportInvoice": "导出发票",
+    "newInvoice": "新建发票",
+    "generatePdf": "生成PDF",
+    "pdfView": "PDF视图"
+  },
+  "footer": {
+    "developedBy": "开发人员"
+  },
+  "languageSelector": {
+    "placeholder": "选择语言",
+    "title": "语言"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Configure your profile and invoicing preferences",
+    "save": "Save",
+    "reset": "Reset",
+    "businessInfo": {
+      "title": "Business",
+      "description": "Your company details used as the default sender",
+      "saved": "Business info saved"
+    },
+    "branding": {
+      "title": "Branding",
+      "description": "Customize your invoice appearance",
+      "logo": "Company Logo",
+      "watermark": "Watermark Logo",
+      "brandColor": "Brand Color",
+      "defaultTemplate": "Default Template",
+      "saved": "Branding saved"
+    },
+    "invoiceDefaults": {
+      "title": "Defaults",
+      "description": "Default values for new invoices",
+      "currency": "Default Currency",
+      "language": "Default Language",
+      "numbering": "Numbering",
+      "invoicePrefix": "Invoice Prefix",
+      "nextNumber": "Next Number",
+      "preview": "Preview",
+      "defaultCharges": "Default Charges",
+      "taxRate": "Default Tax Rate",
+      "taxID": "Tax ID",
+      "paymentTerms": "Default Payment Terms",
+      "additionalNotes": "Default Additional Notes",
+      "saved": "Invoice defaults saved"
+    },
+    "paymentInfo": {
+      "title": "Payment",
+      "description": "Default payment details for your invoices",
+      "saved": "Payment info saved"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "ytdRevenue": "Year-to-date revenue",
+    "unpaid": "Unpaid",
+    "overdue": "Overdue",
+    "recentInvoices": "Recent invoices"
+  }
 }
