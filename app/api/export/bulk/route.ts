@@ -43,7 +43,7 @@ export async function GET(req: NextRequest) {
         },
     });
 
-    const rows = invoices.map((inv) => {
+    const rows = invoices.map((inv: any) => {
         const payload = inv.payload as Record<string, unknown>;
         const receiver = payload?.receiver as
             | Record<string, unknown>
