@@ -74,8 +74,8 @@ docker run -p 3000:3000 \
   -e DATABASE_URL=postgresql://user:pass@db-host:5432/facturapp \
   -e NEXTAUTH_SECRET=$(openssl rand -hex 32) \
   -e AUTH_SECRET=$NEXTAUTH_SECRET \
-  -e NEXTAUTH_URL=https://yourdomain.com \
-  -e NEXT_PUBLIC_SITE_URL=https://yourdomain.com \
+  -e NEXTAUTH_URL=https://facturapp.siferone.com \
+  -e NEXT_PUBLIC_SITE_URL=https://facturapp.siferone.com \
   -e RESEND_API_KEY=re_xxx \
   -e EMAIL_FROM="FacturApp <no-reply@yourdomain.com>" \
   facturapp
@@ -137,8 +137,8 @@ Then:
 # .env (at least)
 DB_PASSWORD=change-me-please
 NEXTAUTH_SECRET=$(openssl rand -hex 32)
-NEXTAUTH_URL=https://yourdomain.com
-NEXT_PUBLIC_SITE_URL=https://yourdomain.com
+NEXTAUTH_URL=https://facturapp.siferone.com
+NEXT_PUBLIC_SITE_URL=https://facturapp.siferone.com
 
 docker compose up -d --build
 docker compose exec app npm run create-admin
@@ -264,8 +264,8 @@ Run through this before announcing launch:
 - [ ] `npx prisma migrate deploy` ran successfully in production
 - [ ] `npm run create-admin` created the first admin user
 - [ ] Visiting `/setup` as a guest returns 403 (setup locked after first admin)
-- [ ] `curl https://yourdomain.com/api/health` returns `{ "status": "ok", "db": "ok" }`
-- [ ] HTTPS enforced — `curl -I https://yourdomain.com` shows `strict-transport-security`
+- [ ] `curl https://facturapp.siferone.com/api/health` returns `{ "status": "ok", "db": "ok" }`
+- [ ] HTTPS enforced — `curl -I https://facturapp.siferone.com` shows `strict-transport-security`
 - [ ] Password reset email delivers end-to-end (try with a real email)
 - [ ] PDF generation works — create, finalize, and download one invoice
 - [ ] DZD amount-in-words reads naturally in French (e.g., *douze mille trois cent…*)
