@@ -7,7 +7,7 @@ import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const EMAIL_FROM = process.env.EMAIL_FROM ?? "FacturApp <no-reply@facturapp.dz>";
+const EMAIL_FROM = process.env.EMAIL_FROM ?? "FacturApp <no-reply@facturapp.siferone.com>";
 const NODEMAILER_EMAIL = process.env.NODEMAILER_EMAIL;
 const NODEMAILER_PW = process.env.NODEMAILER_PW;
 

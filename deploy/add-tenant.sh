@@ -11,7 +11,7 @@ set -euo pipefail
 SLUG="${1:-}"
 APP_PORT="${2:-}"
 DB_PORT="${3:-}"
-BASE_DOMAIN="${BASE_DOMAIN:-facturapp.dz}"   # override with: BASE_DOMAIN=example.com ./add-tenant.sh ...
+BASE_DOMAIN="${BASE_DOMAIN:-facturapp.siferone.com}"   # override with: BASE_DOMAIN=other.com ./add-tenant.sh ...
 
 if [ -z "$SLUG" ] || [ -z "$APP_PORT" ] || [ -z "$DB_PORT" ]; then
   echo "Usage: $0 <slug> <app_port> <db_port>"

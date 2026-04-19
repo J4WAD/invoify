@@ -6,10 +6,10 @@ Each client gets their own isolated Docker container (app) and PostgreSQL databa
 Internet
    │
    ▼
-Nginx (SSL termination)
-   ├── client1.facturapp.dz ──► app_client1 :3001 ──► db_client1 (postgres)
-   ├── client2.facturapp.dz ──► app_client2 :3002 ──► db_client2 (postgres)
-   └── client3.facturapp.dz ──► app_client3 :3003 ──► db_client3 (postgres)
+Nginx (SSL termination)  — siferone.com VPS
+   ├── client1.facturapp.siferone.com ──► app_client1 :3001 ──► db_client1 (postgres)
+   ├── client2.facturapp.siferone.com ──► app_client2 :3002 ──► db_client2 (postgres)
+   └── client3.facturapp.siferone.com ──► app_client3 :3003 ──► db_client3 (postgres)
 ```
 
 ---
@@ -28,8 +28,8 @@ Each tenant stack uses ~500 MB RAM idle.
 
 ### 2. Domain Strategy (pick one)
 
-- **Subdomain per tenant** — `client1.facturapp.dz`, `client2.facturapp.dz`
-  - Add a wildcard A record `*.facturapp.dz → VPS_IP` in your DNS zone
+- **Subdomain per tenant** — `client1.facturapp.siferone.com`, `client2.facturapp.siferone.com`
+  - Add a wildcard A record `*.facturapp.siferone.com → VPS_IP` in Hostinger DNS
   - Get individual Let's Encrypt certs per subdomain (one `certbot` call each)
 
 - **Client's own domain** — `client1.com`, `client2.com`
@@ -193,8 +193,8 @@ curl http://localhost:3001/api/health
 
 ```bash
 sudo cp ~/tenants/acmecorp/nginx.conf \
-        /etc/nginx/sites-available/acmecorp.facturapp.dz
-sudo ln -s /etc/nginx/sites-available/acmecorp.facturapp.dz \
+        /etc/nginx/sites-available/acmecorp.facturapp.siferone.com
+sudo ln -s /etc/nginx/sites-available/acmecorp.facturapp.siferone.com \
            /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl reload nginx
@@ -203,7 +203,7 @@ sudo systemctl reload nginx
 ### 5.2 — Obtain SSL certificate
 
 ```bash
-sudo certbot --nginx -d acmecorp.facturapp.dz
+sudo certbot --nginx -d acmecorp.facturapp.siferone.com
 # Certbot rewrites the vhost to redirect HTTP → HTTPS automatically
 ```
 
@@ -216,14 +216,14 @@ sudo systemctl status certbot.timer
 
 ## PHASE 6 — DNS Setup in Hostinger
 
-**Hostinger → Domains → DNS Zone → Manage DNS**
+**Hostinger → Domains (siferone.com) → DNS Zone → Manage DNS**
 
 | Type | Name | Value | TTL |
 |------|------|-------|-----|
-| A | `@` | `<VPS_IP>` | 300 |
-| A | `*` | `<VPS_IP>` | 300 |
+| A | `facturapp` | `<VPS_IP>` | 300 |
+| A | `*.facturapp` | `<VPS_IP>` | 300 |
 
-The wildcard `*` record routes all subdomains (client1, client2, …) to the VPS. Individual certs are then issued per subdomain via `certbot`.
+The wildcard `*.facturapp.siferone.com` record routes all tenant subdomains to the VPS. Individual certs are issued per subdomain via `certbot`.
 
 ---
 
@@ -232,11 +232,11 @@ The wildcard `*` record routes all subdomains (client1, client2, …) to the VPS
 Update `~/tenants/PORTS.md` after each new tenant:
 
 ```
-| Slug       | App Port | Domain                     |
-|------------|----------|----------------------------|
-| acmecorp   | 3001     | acmecorp.facturapp.dz      |
-| betacorp   | 3002     | betacorp.facturapp.dz      |
-| gammacorp  | 3003     | gammacorp.facturapp.dz     |
+| Slug       | App Port | Domain                                  |
+|------------|----------|-----------------------------------------|
+| acmecorp   | 3001     | acmecorp.facturapp.siferone.com         |
+| betacorp   | 3002     | betacorp.facturapp.siferone.com         |
+| gammacorp  | 3003     | gammacorp.facturapp.siferone.com        |
 ```
 
 DB containers are on isolated Docker networks — no host port binding needed for PostgreSQL.
@@ -315,7 +315,7 @@ cd ~/tenants/acmecorp && docker compose down
 cd ~/tenants/acmecorp
 docker compose down -v          # stops containers + removes volumes
 cd ~ && rm -rf ~/tenants/acmecorp
-sudo rm /etc/nginx/sites-enabled/acmecorp.facturapp.dz
-sudo rm /etc/nginx/sites-available/acmecorp.facturapp.dz
+sudo rm /etc/nginx/sites-enabled/acmecorp.facturapp.siferone.com
+sudo rm /etc/nginx/sites-available/acmecorp.facturapp.siferone.com
 sudo systemctl reload nginx
 ```
