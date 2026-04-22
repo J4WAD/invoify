@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { signIn, auth } from "@/auth";
 import { AuthError } from "next-auth";
 import { hasAnyUser } from "@/lib/auth/userStore";
+import LoginForm from "./LoginSubmitButton";
 
 type PageProps = {
     params: Promise<{ locale: string }>;
@@ -10,7 +11,7 @@ type PageProps = {
 
 export default async function LoginPage({ params, searchParams }: PageProps) {
     const { locale } = await params;
-    const { error, callbackUrl, lockedUntil } = await searchParams;
+    const { error, callbackUrl } = await searchParams;
 
     if (!(await hasAnyUser())) redirect(`/${locale}/auth/setup`);
     const session = await auth();
@@ -49,40 +50,12 @@ export default async function LoginPage({ params, searchParams }: PageProps) {
                     <p className="text-sm text-muted-foreground mt-1">Connexion</p>
                 </div>
 
-                {errorMessage && (
-                    <p className="mb-4 text-sm text-destructive text-center">{errorMessage}</p>
-                )}
-
-                <form action={loginAction} className="space-y-4">
-                    <input type="hidden" name="callbackUrl" value={callbackUrl || `/${locale}`} />
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Utilisateur</label>
-                        <input
-                            name="username"
-                            type="text"
-                            required
-                            autoComplete="username"
-                            className="w-full px-3 py-2 border rounded-md bg-background text-sm"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Mot de passe</label>
-                        <input
-                            name="password"
-                            type="password"
-                            required
-                            autoComplete="current-password"
-                            className="w-full px-3 py-2 border rounded-md bg-background text-sm"
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        className="w-full py-2 rounded-md text-white font-medium text-sm"
-                        style={{ backgroundColor: "#1e3a8a" }}
-                    >
-                        Se connecter
-                    </button>
-                </form>
+                <LoginForm
+                    action={loginAction}
+                    errorMessage={errorMessage}
+                    callbackUrl={callbackUrl || `/${locale}`}
+                    locale={locale}
+                />
 
                 <p className="mt-4 text-center text-xs text-muted-foreground">
                     <a href={`/${locale}/auth/forgot`} className="underline hover:text-foreground">

@@ -9,6 +9,7 @@ import { Plus, Download } from "lucide-react";
 
 import { formatNumberWithCommas } from "@/lib/helpers";
 import { apiFetch, UnauthorizedError } from "@/lib/apiFetch";
+import LoadingScreen from "@/app/components/reusables/LoadingScreen";
 import { useTranslationContext } from "@/contexts/TranslationContext";
 
 type Row = {
@@ -119,9 +120,7 @@ export default function DashboardPage() {
                 </div>
             </div>
 
-            {loading && (
-                <p className="text-sm text-muted-foreground">Chargement…</p>
-            )}
+            {loading && <LoadingScreen message="Chargement du tableau de bord…" fullScreen={false} />}
             {error && (
                 <p className="text-sm text-red-600">
                     Erreur: {error}

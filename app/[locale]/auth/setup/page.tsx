@@ -1,6 +1,8 @@
 "use client";
 import { redirect } from "next/navigation";
 import { useState, useEffect } from "react";
+
+import LoadingScreen from "@/app/components/reusables/LoadingScreen";
 import { useRouter, useParams } from "next/navigation";
 
 const MIN_PASSWORD_LENGTH = 12;
@@ -62,7 +64,7 @@ export default function SetupPage() {
         }
     }
 
-    if (checking) return null;
+    if (checking) return <LoadingScreen message="Vérification…" />;
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-background px-4">
