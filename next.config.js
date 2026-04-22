@@ -14,6 +14,10 @@ const withPWA = require("next-pwa")({
             },
         },
         {
+            urlPattern: /\/auth(\/|$)|\/api\/auth\//i,
+            handler: "NetworkOnly",
+        },
+        {
             urlPattern: /\/api\/invoice\/generate/i,
             handler: "NetworkOnly",
         },
@@ -29,6 +33,10 @@ const withPWA = require("next-pwa")({
                 cacheName: "image-cache",
                 expiration: { maxEntries: 60, maxAgeSeconds: 60 * 60 * 24 * 30 },
             },
+        },
+        {
+            urlPattern: ({ request }) => request.mode === "navigate",
+            handler: "NetworkOnly",
         },
         {
             urlPattern: /.*/i,
