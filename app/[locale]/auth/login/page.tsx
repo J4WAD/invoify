@@ -15,7 +15,9 @@ export default async function LoginPage({ params, searchParams }: PageProps) {
 
     if (!(await hasAnyUser())) redirect(`/${locale}/auth/setup`);
     const session = await auth();
-    if (session) redirect(callbackUrl || `/${locale}`);
+    const decoded = callbackUrl ? decodeURIComponent(callbackUrl) : "";
+    const safeCallback = decoded && !decoded.includes("/auth/") ? decoded : `/${locale}`;
+    if (session) redirect(safeCallback);
 
     async function loginAction(formData: FormData) {
         "use server";
