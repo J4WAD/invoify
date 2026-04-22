@@ -88,7 +88,7 @@ const buildDefaultsFromProfile = (profile: ProfileType) => {
     details: {
       ...FORM_DEFAULT_VALUES.details,
       invoiceLogo: branding.logo || "",
-      brandColor: branding.brandColor || "#2563eb",
+      brandColor: branding.brandColor || "#1e3a8a",
       watermarkImage: branding.watermarkLogo || "",
       pdfTemplate: branding.defaultTemplate || 1,
       invoiceNumber,
@@ -148,8 +148,9 @@ const Providers = ({ children }: ProvidersProps) => {
     <SessionProvider>
     <ThemeProvider
       attribute="class"
-      defaultTheme="system"
-      enableSystem
+      defaultTheme="light"
+      enableSystem={false}
+      forcedTheme="light"
       disableTransitionOnChange
     >
       <TranslationProvider>

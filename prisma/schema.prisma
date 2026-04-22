@@ -78,7 +78,7 @@ model Profile {
 
   logo            String?   @db.Text
   watermarkLogo   String?   @db.Text
-  brandColor      String    @default("#2563eb")
+  brandColor      String    @default("#1e3a8a")
   defaultTemplate Int       @default(1)
 
   currency               String @default("DZD")

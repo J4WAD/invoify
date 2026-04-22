@@ -13,7 +13,7 @@ import Logo from "@/public/assets/logottype.png";
 import { Card } from "@/components/ui/card";
 
 // Components
-import { BaseButton, DevDebug, LanguageSelector, SettingsModal, ThemeSwitcher } from "@/app/components";
+import { BaseButton, DevDebug, LanguageSelector, SettingsModal } from "@/app/components";
 
 // Context
 import { useTranslationContext } from "@/contexts/TranslationContext";
@@ -87,7 +87,6 @@ const BaseNavbar = () => {
                                 <Settings className="h-[1.2rem] w-[1.2rem]" />
                             </BaseButton>
                         </SettingsModal>
-                        <ThemeSwitcher />
                     </div>
                 </Card>
             </nav>

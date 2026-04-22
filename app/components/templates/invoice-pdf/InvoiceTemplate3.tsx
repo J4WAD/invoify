@@ -17,7 +17,7 @@ import { InvoiceType } from "@/types";
 const InvoiceTemplate3 = (data: InvoiceType) => {
 	const { sender, receiver, details } = data;
 
-	const brand = details.brandColor || "#2563eb";
+	const brand = details.brandColor || "#1e3a8a";
 	const docType = (details.documentType || "facture") as DocumentType;
 	const docConfig = DOCUMENT_TYPE_CONFIG[docType];
 

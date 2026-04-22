@@ -14,7 +14,7 @@ import { toast } from "@/components/ui/use-toast";
 import type { BrandingType } from "@/types";
 
 const PRESET_COLORS = [
-    "#2563eb",
+    "#1e3a8a",
     "#dc2626",
     "#16a34a",
     "#9333ea",
@@ -65,7 +65,7 @@ const ImageUpload = ({ label, value, onChange, placeholder }: ImageUploadProps) 
                     </Button>
                 </div>
             ) : (
-                <label className="flex justify-center items-center h-16 w-full cursor-pointer rounded-md bg-gray-100 dark:bg-slate-800 border border-dashed border-gray-300 dark:border-gray-600 hover:border-blue-500 mt-1">
+                <label className="flex justify-center items-center h-16 w-full cursor-pointer rounded-md bg-gray-100 border border-dashed border-gray-300 hover:border-blue-500 mt-1">
                     <div className="flex flex-col items-center text-sm text-muted-foreground">
                         <Image className="h-5 w-5 mb-1" />
                         <span>{placeholder}</span>

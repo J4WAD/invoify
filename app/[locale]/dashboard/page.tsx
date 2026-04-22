@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Plus, Download } from "lucide-react";
 
 import { formatNumberWithCommas } from "@/lib/helpers";
+import { apiFetch, UnauthorizedError } from "@/lib/apiFetch";
 import { useTranslationContext } from "@/contexts/TranslationContext";
 
 type Row = {
@@ -55,13 +56,12 @@ export default function DashboardPage() {
         let cancelled = false;
         (async () => {
             try {
-                const res = await fetch("/api/invoices?perPage=100", {
-                    credentials: "include",
-                });
+                const res = await apiFetch("/api/invoices?perPage=100");
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data: ListResponse = await res.json();
                 if (!cancelled) setRows(data.items);
             } catch (e) {
+                if (e instanceof UnauthorizedError) return;
                 if (!cancelled)
                     setError(e instanceof Error ? e.message : "unknown");
             } finally {
@@ -124,7 +124,7 @@ export default function DashboardPage() {
             )}
             {error && (
                 <p className="text-sm text-red-600">
-                    Erreur: {error} — connectez-vous pour voir vos factures.
+                    Erreur: {error}
                 </p>
             )}
 

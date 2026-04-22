@@ -165,7 +165,7 @@ export const FORM_DEFAULT_VALUES = {
     ],
     currency: "DZD",
     language: "French",
-    brandColor: "#2563eb",
+    brandColor: "#1e3a8a",
     watermarkImage: "",
     devisValidity: "",
     taxDetails: {

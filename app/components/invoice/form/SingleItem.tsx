@@ -99,7 +99,7 @@ const SingleItem = ({
     };
 
     const boxDragClasses = isDragging
-        ? "border-2 bg-gray-200 border-blue-600 dark:bg-slate-900 z-10"
+        ? "border-2 bg-gray-200 border-blue-600 z-10"
         : "border";
 
     const gripDragClasses = isDragging
@@ -110,7 +110,7 @@ const SingleItem = ({
         <div
             style={style}
             {...attributes}
-            className={`${boxDragClasses} group flex flex-col gap-y-5 p-3 my-2 cursor-default rounded-xl bg-gray-50 dark:bg-slate-800 dark:border-gray-600`}
+            className={`${boxDragClasses} group flex flex-col gap-y-5 p-3 my-2 cursor-default rounded-xl bg-gray-50`}
         >
             {/* {isDragging && <div className="bg-blue-600 h-1 rounded-full"></div>} */}
             <div className="flex flex-wrap justify-between">

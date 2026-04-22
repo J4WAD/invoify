@@ -84,7 +84,7 @@ const TemplateSelector = () => {
                                         <div className="relative">
                                             {formValues.details.pdfTemplate ===
                                                 template.id && (
-                                                <div className="shadow-lg absolute right-2 top-2 rounded-full bg-blue-300 dark:bg-blue-600">
+                                                <div className="shadow-lg absolute right-2 top-2 rounded-full bg-blue-300">
                                                     <Check />
                                                 </div>
                                             )}

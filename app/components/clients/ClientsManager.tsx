@@ -21,6 +21,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { useToast } from "@/components/ui/use-toast";
+import { apiFetch, UnauthorizedError } from "@/lib/apiFetch";
 
 interface Client {
     id: string;
@@ -59,10 +60,11 @@ export default function ClientsManager() {
         setLoading(true);
         try {
             const url = `/api/clients${q ? `?search=${encodeURIComponent(q)}` : ""}`;
-            const res = await fetch(url);
+            const res = await apiFetch(url);
             const data = await res.json();
             setClients(data.clients ?? []);
-        } catch {
+        } catch (err) {
+            if (err instanceof UnauthorizedError) return;
             toast({ title: "Erreur", description: "Impossible de charger les clients", variant: "destructive" });
         } finally {
             setLoading(false);
@@ -99,7 +101,7 @@ export default function ClientsManager() {
         try {
             const url = editingClient ? `/api/clients/${editingClient.id}` : "/api/clients";
             const method = editingClient ? "PATCH" : "POST";
-            const res = await fetch(url, {
+            const res = await apiFetch(url, {
                 method,
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(form),
@@ -108,7 +110,8 @@ export default function ClientsManager() {
             toast({ title: editingClient ? "Client mis à jour" : "Client créé" });
             setDialogOpen(false);
             fetchClients(search);
-        } catch {
+        } catch (err) {
+            if (err instanceof UnauthorizedError) return;
             toast({ title: "Erreur", description: "Impossible de sauvegarder", variant: "destructive" });
         } finally {
             setSaving(false);
@@ -119,12 +122,13 @@ export default function ClientsManager() {
         if (!deletingClient) return;
         setSaving(true);
         try {
-            const res = await fetch(`/api/clients/${deletingClient.id}`, { method: "DELETE" });
+            const res = await apiFetch(`/api/clients/${deletingClient.id}`, { method: "DELETE" });
             if (!res.ok && res.status !== 204) throw new Error();
             toast({ title: "Client supprimé" });
             setDeleteDialogOpen(false);
             fetchClients(search);
-        } catch {
+        } catch (err) {
+            if (err instanceof UnauthorizedError) return;
             toast({ title: "Erreur", description: "Impossible de supprimer", variant: "destructive" });
         } finally {
             setSaving(false);

@@ -51,7 +51,7 @@ export const metadata: Metadata = {
 export const viewport = {
     width: "device-width",
     initialScale: 1,
-    themeColor: "#2563eb",
+    themeColor: "#1e3a8a",
 };
 
 export function generateStaticParams() {
@@ -88,7 +88,7 @@ export default async function LocaleLayout(props: {
                 />
             </head>
             <body
-                className={`${outfit.className} ${dancingScript.variable} ${parisienne.variable} ${greatVibes.variable} ${alexBrush.variable} antialiased bg-slate-100 dark:bg-slate-800`}
+                className={`${outfit.className} ${dancingScript.variable} ${parisienne.variable} ${greatVibes.variable} ${alexBrush.variable} antialiased bg-slate-100`}
                 suppressHydrationWarning
             >
                 <NextIntlClientProvider locale={locale} messages={messages}>

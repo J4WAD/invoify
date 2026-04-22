@@ -1,6 +1,6 @@
 export default function MentionsLegalesPage() {
     return (
-        <main className="lg:container mx-auto py-10 px-4 max-w-3xl prose dark:prose-invert">
+        <main className="lg:container mx-auto py-10 px-4 max-w-3xl prose">
             <h1>Mentions légales</h1>
             <p className="text-sm text-muted-foreground">Conformément aux dispositions légales en vigueur en Algérie</p>
 

@@ -183,7 +183,7 @@ export const InvoiceContextProvider = ({
       details: {
         ...FORM_DEFAULT_VALUES.details,
         invoiceLogo: branding.logo || "",
-        brandColor: branding.brandColor || "#2563eb",
+        brandColor: branding.brandColor || "#1e3a8a",
         watermarkImage: branding.watermarkLogo || "",
         pdfTemplate: branding.defaultTemplate || 1,
         invoiceNumber: getNextInvoiceNumber(),
@@ -256,7 +256,7 @@ export const InvoiceContextProvider = ({
           brandColor:
             data.details.brandColor ||
             profile.branding.brandColor ||
-            "#2563eb",
+            "#1e3a8a",
         },
       };
 

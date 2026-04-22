@@ -61,7 +61,7 @@ export default function ResetPasswordPage() {
         <div className="min-h-screen flex items-center justify-center bg-background px-4">
             <div className="w-full max-w-sm bg-card border rounded-lg shadow-sm p-8">
                 <div className="mb-6 text-center">
-                    <h1 className="text-2xl font-bold" style={{ color: "#2563eb" }}>FacturApp</h1>
+                    <h1 className="text-2xl font-bold" style={{ color: "#1e3a8a" }}>FacturApp</h1>
                     <p className="text-sm text-muted-foreground mt-1">Nouveau mot de passe</p>
                 </div>
 
@@ -97,7 +97,7 @@ export default function ResetPasswordPage() {
                         type="submit"
                         disabled={loading}
                         className="w-full py-2 rounded-md text-white font-medium text-sm disabled:opacity-60"
-                        style={{ backgroundColor: "#2563eb" }}
+                        style={{ backgroundColor: "#1e3a8a" }}
                     >
                         {loading ? "Enregistrement…" : "Enregistrer le mot de passe"}
                     </button>

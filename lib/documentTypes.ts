@@ -26,7 +26,7 @@ export const DOCUMENT_TYPE_CONFIG: Record<DocumentType, DocTypeConfig> = {
         showSignature: true,
         showPrices: true,
         pdfTitle: "FACTURE",
-        badgeColor: "#2563eb",
+        badgeColor: "#1e3a8a",
     },
     devis: {
         type: "devis",

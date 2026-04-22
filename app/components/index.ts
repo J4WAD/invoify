@@ -53,8 +53,8 @@ import FormCustomInput from "./reusables/form-fields/FormCustomInput";
 import ColorInput from "./reusables/form-fields/ColorInput";
 
 import BaseButton from "./reusables/BaseButton";
-import ThemeSwitcher from "./reusables/ThemeSwitcher";
 import LanguageSelector from "./reusables/LanguageSelector";
+import LoadingScreen from "./reusables/LoadingScreen";
 import Subheading from "./reusables/Subheading";
 
 /* =========================
@@ -137,8 +137,8 @@ export {
     FormCustomInput,
     ColorInput,
     BaseButton,
-    ThemeSwitcher,
     LanguageSelector,
+    LoadingScreen,
     Subheading,
     SendPdfToEmailModal,
     InvoiceLoaderModal,

@@ -29,7 +29,7 @@ export const BusinessInfoSchema = z.object({
 export const BrandingSchema = z.object({
     logo: z.string().default(""),
     watermarkLogo: z.string().default(""),
-    brandColor: z.string().default("#2563eb"),
+    brandColor: z.string().default("#1e3a8a"),
     defaultTemplate: z.number().min(1).max(3).default(1),
 });
 

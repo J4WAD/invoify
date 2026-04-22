@@ -13,6 +13,7 @@ import {
 
 import { LOCAL_STORAGE_PROFILE_KEY } from "@/lib/variables";
 import { formatDocumentNumber } from "@/lib/documentTypes";
+import { apiFetch, UnauthorizedError } from "@/lib/apiFetch";
 
 import type {
     ProfileType,
@@ -33,6 +34,7 @@ const DEFAULT_PROFILE: ProfileType = ProfileSchema.parse({
 
 type ProfileContextType = {
     profile: ProfileType;
+    profileLoaded: boolean;
     updateBusinessInfo: (data: BusinessInfoType) => void;
     updateBranding: (data: BrandingType) => void;
     updateInvoiceDefaults: (data: InvoiceDefaultsType) => void;
@@ -49,6 +51,7 @@ type ProfileContextType = {
 
 const defaultContext: ProfileContextType = {
     profile: DEFAULT_PROFILE,
+    profileLoaded: false,
     updateBusinessInfo: () => {},
     updateBranding: () => {},
     updateInvoiceDefaults: () => {},
@@ -74,9 +77,13 @@ type ProfileContextProviderProps = {
 
 export const ProfileContextProvider = ({ children }: ProfileContextProviderProps) => {
     const [profile, setProfile] = useState<ProfileType>(DEFAULT_PROFILE);
+    const [profileLoaded, setProfileLoaded] = useState(false);
 
     useEffect(() => {
         if (typeof window === "undefined") return;
+        let cancelled = false;
+
+        // Synchronous localStorage read for instant UX
         try {
             const raw = window.localStorage.getItem(LOCAL_STORAGE_PROFILE_KEY);
             if (raw) {
@@ -86,19 +93,74 @@ export const ProfileContextProvider = ({ children }: ProfileContextProviderProps
         } catch {
             // Invalid data — use defaults
         }
+
+        // Async DB fetch (source of truth for signed-in users)
+        (async () => {
+            try {
+                const res = await apiFetch("/api/profile");
+                if (!res.ok) return;
+                const dbProfile = await res.json();
+                const parsed = ProfileSchema.safeParse({
+                    ...dbProfile,
+                    clients: [],
+                });
+                if (!cancelled && parsed.success) {
+                    setProfile((prev) => {
+                        const merged: ProfileType = { ...parsed.data, clients: prev.clients };
+                        try {
+                            window.localStorage.setItem(
+                                LOCAL_STORAGE_PROFILE_KEY,
+                                JSON.stringify(merged)
+                            );
+                        } catch {}
+                        return merged;
+                    });
+                }
+            } catch (err) {
+                if (err instanceof UnauthorizedError) return;
+            } finally {
+                if (!cancelled) setProfileLoaded(true);
+            }
+        })();
+
+        return () => {
+            cancelled = true;
+        };
     }, []);
 
-    const persist = useCallback((updated: ProfileType) => {
-        setProfile(updated);
+    const persistToDb = useCallback(async (payload: Partial<ProfileType>) => {
         try {
-            window.localStorage.setItem(LOCAL_STORAGE_PROFILE_KEY, JSON.stringify(updated));
-        } catch {}
+            await apiFetch("/api/profile", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            });
+        } catch (err) {
+            if (err instanceof UnauthorizedError) return;
+            // Non-blocking: localStorage is the fallback
+        }
     }, []);
+
+    const persist = useCallback(
+        (updated: ProfileType, syncFields?: Partial<ProfileType>) => {
+            setProfile(updated);
+            try {
+                window.localStorage.setItem(LOCAL_STORAGE_PROFILE_KEY, JSON.stringify(updated));
+            } catch {}
+            if (syncFields) {
+                void persistToDb(syncFields);
+            }
+        },
+        [persistToDb]
+    );
 
     const updateBusinessInfo = useCallback(
         (data: BusinessInfoType) => {
             const validated = BusinessInfoSchema.parse(data);
-            persist({ ...profile, businessInfo: validated });
+            persist(
+                { ...profile, businessInfo: validated },
+                { businessInfo: validated }
+            );
         },
         [profile, persist]
     );
@@ -106,7 +168,7 @@ export const ProfileContextProvider = ({ children }: ProfileContextProviderProps
     const updateBranding = useCallback(
         (data: BrandingType) => {
             const validated = BrandingSchema.parse(data);
-            persist({ ...profile, branding: validated });
+            persist({ ...profile, branding: validated }, { branding: validated });
         },
         [profile, persist]
     );
@@ -114,7 +176,10 @@ export const ProfileContextProvider = ({ children }: ProfileContextProviderProps
     const updateInvoiceDefaults = useCallback(
         (data: InvoiceDefaultsType) => {
             const validated = InvoiceDefaultsSchema.parse(data);
-            persist({ ...profile, invoiceDefaults: validated });
+            persist(
+                { ...profile, invoiceDefaults: validated },
+                { invoiceDefaults: validated }
+            );
         },
         [profile, persist]
     );
@@ -122,7 +187,10 @@ export const ProfileContextProvider = ({ children }: ProfileContextProviderProps
     const updatePaymentInfo = useCallback(
         (data: PaymentInfoType) => {
             const validated = PaymentInfoSchema.parse(data);
-            persist({ ...profile, paymentInfo: validated });
+            persist(
+                { ...profile, paymentInfo: validated },
+                { paymentInfo: validated }
+            );
         },
         [profile, persist]
     );
@@ -133,14 +201,14 @@ export const ProfileContextProvider = ({ children }: ProfileContextProviderProps
     }, [profile.invoiceDefaults]);
 
     const incrementInvoiceNumber = useCallback(() => {
-        const updated = {
-            ...profile,
-            invoiceDefaults: {
-                ...profile.invoiceDefaults,
-                nextInvoiceNumber: profile.invoiceDefaults.nextInvoiceNumber + 1,
-            },
+        const nextDefaults = {
+            ...profile.invoiceDefaults,
+            nextInvoiceNumber: profile.invoiceDefaults.nextInvoiceNumber + 1,
         };
-        persist(updated);
+        persist(
+            { ...profile, invoiceDefaults: nextDefaults },
+            { invoiceDefaults: nextDefaults }
+        );
     }, [profile, persist]);
 
     const getNextDocumentNumber = useCallback(
@@ -159,13 +227,14 @@ export const ProfileContextProvider = ({ children }: ProfileContextProviderProps
                 ...counters,
                 [type]: (counters?.[type] ?? 1) + 1,
             };
-            persist({
-                ...profile,
-                invoiceDefaults: {
-                    ...profile.invoiceDefaults,
-                    documentCounters: nextCounters,
-                },
-            });
+            const nextDefaults = {
+                ...profile.invoiceDefaults,
+                documentCounters: nextCounters,
+            };
+            persist(
+                { ...profile, invoiceDefaults: nextDefaults },
+                { invoiceDefaults: nextDefaults }
+            );
         },
         [profile, persist]
     );
@@ -196,13 +265,19 @@ export const ProfileContextProvider = ({ children }: ProfileContextProviderProps
     );
 
     const resetProfile = useCallback(() => {
-        persist(DEFAULT_PROFILE);
+        persist(DEFAULT_PROFILE, {
+            businessInfo: DEFAULT_PROFILE.businessInfo,
+            branding: DEFAULT_PROFILE.branding,
+            invoiceDefaults: DEFAULT_PROFILE.invoiceDefaults,
+            paymentInfo: DEFAULT_PROFILE.paymentInfo,
+        });
     }, [persist]);
 
     return (
         <ProfileContext.Provider
             value={{
                 profile,
+                profileLoaded,
                 updateBusinessInfo,
                 updateBranding,
                 updateInvoiceDefaults,

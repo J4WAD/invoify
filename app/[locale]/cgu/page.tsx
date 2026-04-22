@@ -1,6 +1,6 @@
 export default function CGUPage() {
     return (
-        <main className="lg:container mx-auto py-10 px-4 max-w-3xl prose dark:prose-invert">
+        <main className="lg:container mx-auto py-10 px-4 max-w-3xl prose">
             <h1>Conditions Générales d&apos;Utilisation</h1>
             <p className="text-sm text-muted-foreground">Dernière mise à jour : 18 avril 2026</p>
 

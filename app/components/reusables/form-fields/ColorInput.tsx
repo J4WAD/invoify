@@ -16,7 +16,7 @@ type ColorInputProps = {
 };
 
 const PRESET_COLORS = [
-    { hex: "#2563eb", label: "Blue" },
+    { hex: "#1e3a8a", label: "Blue" },
     { hex: "#16a34a", label: "Green" },
     { hex: "#dc2626", label: "Red" },
     { hex: "#9333ea", label: "Purple" },
@@ -72,7 +72,7 @@ const ColorInput = ({ name, label }: ColorInputProps) => {
                                     <div className="relative">
                                         <input
                                             type="color"
-                                            value={field.value || "#2563eb"}
+                                            value={field.value || "#1e3a8a"}
                                             onChange={(e) =>
                                                 field.onChange(e.target.value)
                                             }
@@ -84,7 +84,7 @@ const ColorInput = ({ name, label }: ColorInputProps) => {
                                         className="text-xs font-mono text-muted-foreground"
                                         style={{ minWidth: "4.5rem" }}
                                     >
-                                        {field.value || "#2563eb"}
+                                        {field.value || "#1e3a8a"}
                                     </span>
                                 </div>
                             </FormControl>
