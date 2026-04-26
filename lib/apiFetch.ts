@@ -13,8 +13,19 @@ function getLocaleFromPath(): string {
     return match?.[1] ?? "fr";
 }
 
+function isOnAuthPage(): boolean {
+    if (typeof window === "undefined") return false;
+    // Strip leading locale segment (fr, en, pt-BR, …) then check for /auth/*.
+    const stripped = window.location.pathname.replace(
+        /^\/[a-z]{2}(?:-[A-Za-z]{2})?(?=\/|$)/,
+        ""
+    );
+    return stripped.startsWith("/auth");
+}
+
 function redirectToLogin() {
     if (typeof window === "undefined") return;
+    if (isOnAuthPage()) return; // already on an auth page — redirecting would loop
     const locale = getLocaleFromPath();
     const callbackUrl = encodeURIComponent(
         window.location.pathname + window.location.search
