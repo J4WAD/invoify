@@ -38,6 +38,15 @@ next-env.d.ts
 
 # cache
 /.cache
+
+# next-pwa generated artifacts (rebuilt on every `next build`)
+/public/sw.js
+/public/sw.js.map
+/public/workbox-*.js
+/public/workbox-*.js.map
+/public/swe-worker-*.js
+/public/swe-worker-*.js.map
+/public/fallback-*.js
 # Auth / user data
 data/
 
