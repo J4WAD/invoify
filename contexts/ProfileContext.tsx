@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 
 import {
     ProfileSchema,
@@ -14,6 +14,7 @@ import {
 import { LOCAL_STORAGE_PROFILE_KEY } from "@/lib/variables";
 import { formatDocumentNumber } from "@/lib/documentTypes";
 import { apiFetch, UnauthorizedError } from "@/lib/apiFetch";
+import useToasts from "@/hooks/useToasts";
 
 import type {
     ProfileType,
@@ -25,6 +26,23 @@ import type {
     DocumentType,
 } from "@/types";
 
+export type ProfileSection =
+    | "businessInfo"
+    | "branding"
+    | "invoiceDefaults"
+    | "paymentInfo";
+
+export type SaveState = "idle" | "saving" | "saved" | "error";
+
+type SaveStateMap = Record<ProfileSection, SaveState>;
+
+const INITIAL_SAVE_STATE: SaveStateMap = {
+    businessInfo: "idle",
+    branding: "idle",
+    invoiceDefaults: "idle",
+    paymentInfo: "idle",
+};
+
 const DEFAULT_PROFILE: ProfileType = ProfileSchema.parse({
     businessInfo: {},
     branding: {},
@@ -35,6 +53,7 @@ const DEFAULT_PROFILE: ProfileType = ProfileSchema.parse({
 type ProfileContextType = {
     profile: ProfileType;
     profileLoaded: boolean;
+    saveState: SaveStateMap;
     updateBusinessInfo: (data: BusinessInfoType) => void;
     updateBranding: (data: BrandingType) => void;
     updateInvoiceDefaults: (data: InvoiceDefaultsType) => void;
@@ -52,6 +71,7 @@ type ProfileContextType = {
 const defaultContext: ProfileContextType = {
     profile: DEFAULT_PROFILE,
     profileLoaded: false,
+    saveState: INITIAL_SAVE_STATE,
     updateBusinessInfo: () => {},
     updateBranding: () => {},
     updateInvoiceDefaults: () => {},
@@ -78,6 +98,34 @@ type ProfileContextProviderProps = {
 export const ProfileContextProvider = ({ children }: ProfileContextProviderProps) => {
     const [profile, setProfile] = useState<ProfileType>(DEFAULT_PROFILE);
     const [profileLoaded, setProfileLoaded] = useState(false);
+    const [saveState, setSaveState] = useState<SaveStateMap>(INITIAL_SAVE_STATE);
+    const { profileSaveError } = useToasts();
+    const savedTimerRef = useRef<Record<ProfileSection, ReturnType<typeof setTimeout> | null>>({
+        businessInfo: null,
+        branding: null,
+        invoiceDefaults: null,
+        paymentInfo: null,
+    });
+
+    const setSectionState = useCallback(
+        (section: ProfileSection, state: SaveState) => {
+            setSaveState((prev) => ({ ...prev, [section]: state }));
+            // "saved" auto-clears after 2.5s so the pill returns to idle
+            if (state === "saved") {
+                if (savedTimerRef.current[section]) {
+                    clearTimeout(savedTimerRef.current[section]!);
+                }
+                savedTimerRef.current[section] = setTimeout(() => {
+                    setSaveState((prev) =>
+                        prev[section] === "saved"
+                            ? { ...prev, [section]: "idle" }
+                            : prev
+                    );
+                }, 2500);
+            }
+        },
+        []
+    );
 
     useEffect(() => {
         if (typeof window === "undefined") return;
@@ -128,27 +176,42 @@ export const ProfileContextProvider = ({ children }: ProfileContextProviderProps
         };
     }, []);
 
-    const persistToDb = useCallback(async (payload: Partial<ProfileType>) => {
-        try {
-            await apiFetch("/api/profile", {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload),
-            });
-        } catch (err) {
-            if (err instanceof UnauthorizedError) return;
-            // Non-blocking: localStorage is the fallback
-        }
-    }, []);
+    const persistToDb = useCallback(
+        async (payload: Partial<ProfileType>, section?: ProfileSection) => {
+            if (section) setSectionState(section, "saving");
+            try {
+                const res = await apiFetch("/api/profile", {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload),
+                });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                if (section) setSectionState(section, "saved");
+            } catch (err) {
+                if (err instanceof UnauthorizedError) {
+                    // Unauthenticated — localStorage is the only store; not an error.
+                    if (section) setSectionState(section, "idle");
+                    return;
+                }
+                if (section) setSectionState(section, "error");
+                profileSaveError(() => void persistToDb(payload, section));
+            }
+        },
+        [setSectionState, profileSaveError]
+    );
 
     const persist = useCallback(
-        (updated: ProfileType, syncFields?: Partial<ProfileType>) => {
+        (
+            updated: ProfileType,
+            syncFields?: Partial<ProfileType>,
+            section?: ProfileSection
+        ) => {
             setProfile(updated);
             try {
                 window.localStorage.setItem(LOCAL_STORAGE_PROFILE_KEY, JSON.stringify(updated));
             } catch {}
             if (syncFields) {
-                void persistToDb(syncFields);
+                void persistToDb(syncFields, section);
             }
         },
         [persistToDb]
@@ -159,7 +222,8 @@ export const ProfileContextProvider = ({ children }: ProfileContextProviderProps
             const validated = BusinessInfoSchema.parse(data);
             persist(
                 { ...profile, businessInfo: validated },
-                { businessInfo: validated }
+                { businessInfo: validated },
+                "businessInfo"
             );
         },
         [profile, persist]
@@ -168,7 +232,11 @@ export const ProfileContextProvider = ({ children }: ProfileContextProviderProps
     const updateBranding = useCallback(
         (data: BrandingType) => {
             const validated = BrandingSchema.parse(data);
-            persist({ ...profile, branding: validated }, { branding: validated });
+            persist(
+                { ...profile, branding: validated },
+                { branding: validated },
+                "branding"
+            );
         },
         [profile, persist]
     );
@@ -178,7 +246,8 @@ export const ProfileContextProvider = ({ children }: ProfileContextProviderProps
             const validated = InvoiceDefaultsSchema.parse(data);
             persist(
                 { ...profile, invoiceDefaults: validated },
-                { invoiceDefaults: validated }
+                { invoiceDefaults: validated },
+                "invoiceDefaults"
             );
         },
         [profile, persist]
@@ -189,7 +258,8 @@ export const ProfileContextProvider = ({ children }: ProfileContextProviderProps
             const validated = PaymentInfoSchema.parse(data);
             persist(
                 { ...profile, paymentInfo: validated },
-                { paymentInfo: validated }
+                { paymentInfo: validated },
+                "paymentInfo"
             );
         },
         [profile, persist]
@@ -278,6 +348,7 @@ export const ProfileContextProvider = ({ children }: ProfileContextProviderProps
             value={{
                 profile,
                 profileLoaded,
+                saveState,
                 updateBusinessInfo,
                 updateBranding,
                 updateInvoiceDefaults,

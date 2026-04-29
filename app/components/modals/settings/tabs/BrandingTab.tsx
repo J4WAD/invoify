@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 
 import { useProfileContext } from "@/contexts/ProfileContext";
 import { useTranslationContext } from "@/contexts/TranslationContext";
+import SaveStatePill from "../SaveStatePill";
 
 import { Image, ImageMinus } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
@@ -84,7 +85,7 @@ const ImageUpload = ({ label, value, onChange, placeholder }: ImageUploadProps) 
 };
 
 const BrandingTab = () => {
-    const { profile, updateBranding } = useProfileContext();
+    const { profile, updateBranding, saveState } = useProfileContext();
     const { _t } = useTranslationContext();
 
     const [form, setForm] = useState<BrandingType>(profile.branding);
@@ -174,9 +175,12 @@ const BrandingTab = () => {
                 </div>
             </div>
 
-            <Button onClick={handleSave} className="w-full">
-                {_t("settings.save")}
-            </Button>
+            <div className="flex flex-col items-center gap-1">
+                <Button onClick={handleSave} className="w-full">
+                    {_t("settings.save")}
+                </Button>
+                <SaveStatePill state={saveState.branding} />
+            </div>
         </div>
     );
 };

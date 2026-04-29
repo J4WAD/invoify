@@ -68,7 +68,6 @@ const InvoiceTable = ({
         updateInvoiceStatus,
         duplicateInvoice,
         generatePdf,
-        savedInvoices,
     } = useInvoiceContext();
 
     const totalPages = Math.max(1, Math.ceil(invoices.length / perPage));
@@ -85,10 +84,7 @@ const InvoiceTable = ({
     };
 
     const handleDelete = (invoice: InvoiceType) => {
-        const idx = savedInvoices.findIndex(
-            (i) => i.details.invoiceNumber === invoice.details.invoiceNumber
-        );
-        if (idx >= 0) deleteInvoice(idx);
+        deleteInvoice(invoice);
     };
 
     const handleDownloadPdf = async (invoice: InvoiceType) => {

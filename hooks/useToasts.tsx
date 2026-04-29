@@ -73,6 +73,42 @@ const useToasts = () => {
         });
     };
 
+    const saveInvoiceError = (retry?: () => void) => {
+        toast({
+            variant: "destructive",
+            title: "Échec de la synchronisation",
+            description:
+                "La facture a été enregistrée localement, mais la synchronisation avec le serveur a échoué.",
+            action: retry ? (
+                <ToastAction onClick={retry} altText="Réessayer">
+                    Réessayer
+                </ToastAction>
+            ) : undefined,
+        });
+    };
+
+    const statusTransitionError = (message: string) => {
+        toast({
+            variant: "destructive",
+            title: "Transition impossible",
+            description: message,
+        });
+    };
+
+    const profileSaveError = (retry?: () => void) => {
+        toast({
+            variant: "destructive",
+            title: "Échec de l'enregistrement",
+            description:
+                "Vos paramètres n'ont pas pu être synchronisés. Ils restent enregistrés localement.",
+            action: retry ? (
+                <ToastAction onClick={retry} altText="Réessayer">
+                    Réessayer
+                </ToastAction>
+            ) : undefined,
+        });
+    };
+
     return {
         newInvoiceSuccess,
         pdfGenerationSuccess,
@@ -81,6 +117,9 @@ const useToasts = () => {
         sendPdfSuccess,
         sendPdfError,
         importInvoiceError,
+        saveInvoiceError,
+        statusTransitionError,
+        profileSaveError,
     };
 };
 

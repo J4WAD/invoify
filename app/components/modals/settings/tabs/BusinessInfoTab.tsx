@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 
 import { useProfileContext } from "@/contexts/ProfileContext";
 import { useTranslationContext } from "@/contexts/TranslationContext";
+import SaveStatePill from "../SaveStatePill";
 
 import { Plus, Trash2 } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
@@ -15,7 +16,7 @@ import { toast } from "@/components/ui/use-toast";
 import type { BusinessInfoType } from "@/types";
 
 const BusinessInfoTab = () => {
-    const { profile, updateBusinessInfo } = useProfileContext();
+    const { profile, updateBusinessInfo, saveState } = useProfileContext();
     const { _t } = useTranslationContext();
 
     const [form, setForm] = useState<BusinessInfoType>(profile.businessInfo);
@@ -187,9 +188,12 @@ const BusinessInfoTab = () => {
                 {_t("form.steps.fromAndTo.addCustomInput")}
             </Button>
 
-            <Button onClick={handleSave} className="w-full">
-                {_t("settings.save")}
-            </Button>
+            <div className="flex flex-col items-center gap-1">
+                <Button onClick={handleSave} className="w-full">
+                    {_t("settings.save")}
+                </Button>
+                <SaveStatePill state={saveState.businessInfo} />
+            </div>
         </div>
     );
 };

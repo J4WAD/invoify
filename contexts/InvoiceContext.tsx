@@ -23,6 +23,10 @@ import { useProfileContext } from "@/contexts/ProfileContext";
 // Services
 import { exportInvoice } from "@/services/invoice/client/exportInvoice";
 
+// API
+import { apiFetch, UnauthorizedError } from "@/lib/apiFetch";
+import { emitInvoicesChanged } from "@/lib/invoiceEvents";
+
 // Variables
 import {
   FORM_DEFAULT_VALUES,
@@ -37,6 +41,14 @@ import {
 // Types
 import { ExportTypes, InvoiceType } from "@/types";
 
+const buildInvoicePayload = (data: InvoiceType) => ({
+  payload: data,
+  documentType: data.details.documentType ?? "facture",
+  totalTtc: Number(data.details.totalAmount) || 0,
+  currency: data.details.currency || "DZD",
+  totalAmountInWords: data.details.totalAmountInWords ?? null,
+});
+
 const defaultInvoiceContext = {
   invoicePdf: new Blob(),
   invoicePdfLoading: false,
@@ -50,7 +62,7 @@ const defaultInvoiceContext = {
   printPdf: () => {},
   previewPdfInTab: () => {},
   saveInvoice: () => {},
-  deleteInvoice: (index: number) => {},
+  deleteInvoice: (invoice: InvoiceType) => {},
   updateInvoiceStatus: (invoiceNumber: string, status: InvoiceType["details"]["status"]) => {},
   duplicateInvoice: (invoice: InvoiceType) => {},
   sendPdfToMail: (email: string): Promise<void> => Promise.resolve(),
@@ -82,10 +94,12 @@ export const InvoiceContextProvider = ({
     sendPdfSuccess,
     sendPdfError,
     importInvoiceError,
+    saveInvoiceError,
+    statusTransitionError,
   } = useToasts();
 
   // Get form values and methods from form context
-  const { getValues, reset, watch } = useFormContext<InvoiceType>();
+  const { getValues, reset, watch, setValue } = useFormContext<InvoiceType>();
 
   // Profile context for auto-fill and auto-increment
   const { profile, getNextInvoiceNumber, incrementInvoiceNumber } = useProfileContext();
@@ -273,24 +287,35 @@ export const InvoiceContextProvider = ({
           // Toast
           pdfGenerationSuccess();
 
-          // Fire-and-forget: persist to DB so the invoice shows up on the dashboard.
-          // Unauthenticated users still get a PDF; the POST just 401s silently.
-          void fetch("/api/invoices", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({
-              payload: enrichedData,
-              documentType:
-                enrichedData.details.documentType ?? "facture",
-              totalTtc: Number(enrichedData.details.totalAmount) || 0,
-              currency: enrichedData.details.currency || "DZD",
-              totalAmountInWords:
-                enrichedData.details.totalAmountInWords ?? null,
-            }),
-          }).catch(() => {
-            // non-blocking: localStorage still has the invoice
-          });
+          // Persist to DB so the invoice shows on the dashboard. Captures the
+          // returned id so subsequent saves PATCH the same row instead of
+          // creating duplicates. 401 (unauthenticated) is intentionally silent.
+          const persistedId = enrichedData.details.persistedId;
+          try {
+            const res = await apiFetch(
+              persistedId ? `/api/invoices/${persistedId}` : "/api/invoices",
+              {
+                method: persistedId ? "PATCH" : "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(buildInvoicePayload(enrichedData)),
+              }
+            );
+            if (res.ok) {
+              const saved = await res.json();
+              if (saved?.id) {
+                setValue("details.persistedId", saved.id, {
+                  shouldDirty: false,
+                });
+              }
+              emitInvoicesChanged();
+            } else {
+              saveInvoiceError();
+            }
+          } catch (err) {
+            if (!(err instanceof UnauthorizedError)) {
+              saveInvoiceError();
+            }
+          }
         }
       } catch (err) {
         console.log(err);
@@ -298,7 +323,7 @@ export const InvoiceContextProvider = ({
         setInvoicePdfLoading(false);
       }
     },
-    [profile, pdfGenerationSuccess]
+    [profile, pdfGenerationSuccess, setValue, saveInvoiceError]
   );
 
   /**
@@ -356,95 +381,186 @@ export const InvoiceContextProvider = ({
     }
   };
 
-  // TODO: Change function name. (saveInvoiceData maybe?)
   /**
-   * Saves the invoice data to local storage.
+   * Persists the current form values. API-first: PATCH if the form holds a
+   * persistedId, POST otherwise. Always writes the localStorage cache so the
+   * /invoices view stays in sync without a refetch (and so unauthenticated
+   * users still have their invoice list).
    */
   const saveInvoice = () => {
-    if (invoicePdf) {
-      // If get values function is provided, allow to save the invoice
-      if (getValues) {
-        // Retrieve the existing array from local storage or initialize an empty array
-        const savedInvoicesJSON = localStorage.getItem(LOCAL_STORAGE_SAVED_INVOICES_KEY);
-        const savedInvoices = savedInvoicesJSON
-          ? JSON.parse(savedInvoicesJSON)
-          : [];
+    if (!invoicePdf || !getValues) return;
 
-        const updatedDate = new Date().toLocaleDateString(
-          "en-US",
-          SHORT_DATE_OPTIONS
-        );
+    const updatedDate = new Date().toLocaleDateString(
+      "en-US",
+      SHORT_DATE_OPTIONS
+    );
 
-        const formValues = getValues();
-        formValues.details.updatedAt = updatedDate;
+    const formValues = getValues();
+    formValues.details.updatedAt = updatedDate;
 
-        const existingInvoiceIndex = savedInvoices.findIndex(
-          (invoice: InvoiceType) => {
-            return (
-              invoice.details.invoiceNumber === formValues.details.invoiceNumber
-            );
+    // localStorage write-through cache (keyed by invoice number, like before)
+    const savedInvoicesJSON = localStorage.getItem(
+      LOCAL_STORAGE_SAVED_INVOICES_KEY
+    );
+    const cached: InvoiceType[] = savedInvoicesJSON
+      ? JSON.parse(savedInvoicesJSON)
+      : [];
+    const existingInvoiceIndex = cached.findIndex(
+      (invoice) =>
+        invoice.details.invoiceNumber === formValues.details.invoiceNumber
+    );
+    const isNew = existingInvoiceIndex === -1;
+    if (isNew) {
+      cached.push(formValues);
+    } else {
+      cached[existingInvoiceIndex] = formValues;
+    }
+    localStorage.setItem(
+      LOCAL_STORAGE_SAVED_INVOICES_KEY,
+      JSON.stringify(cached)
+    );
+    setSavedInvoices(cached);
+
+    // API persistence (await so we can capture the id for new rows)
+    const persistedId = formValues.details.persistedId;
+    void (async () => {
+      try {
+        const res = await apiFetch(
+          persistedId ? `/api/invoices/${persistedId}` : "/api/invoices",
+          {
+            method: persistedId ? "PATCH" : "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(buildInvoicePayload(formValues)),
           }
         );
-
-        // If invoice already exists
-        if (existingInvoiceIndex !== -1) {
-          savedInvoices[existingInvoiceIndex] = formValues;
-
-          // Toast
-          modifiedInvoiceSuccess();
-        } else {
-          // Add the form values to the array
-          savedInvoices.push(formValues);
-
-          // Auto-increment invoice number for next invoice
-          incrementInvoiceNumber();
-
-          // Toast
-          saveInvoiceSuccess();
+        if (res.ok) {
+          const saved = await res.json();
+          if (saved?.id && !persistedId) {
+            setValue("details.persistedId", saved.id, { shouldDirty: false });
+            // refresh cache entry with the persistedId
+            const next = cached.map((inv) =>
+              inv.details.invoiceNumber === formValues.details.invoiceNumber
+                ? {
+                    ...inv,
+                    details: { ...inv.details, persistedId: saved.id },
+                  }
+                : inv
+            );
+            localStorage.setItem(
+              LOCAL_STORAGE_SAVED_INVOICES_KEY,
+              JSON.stringify(next)
+            );
+            setSavedInvoices(next);
+          }
+          emitInvoicesChanged();
+        } else if (res.status !== 401) {
+          saveInvoiceError(saveInvoice);
         }
-
-        localStorage.setItem(LOCAL_STORAGE_SAVED_INVOICES_KEY, JSON.stringify(savedInvoices));
-
-        setSavedInvoices(savedInvoices);
+      } catch (err) {
+        if (!(err instanceof UnauthorizedError)) {
+          saveInvoiceError(saveInvoice);
+        }
       }
+    })();
+
+    if (isNew) {
+      incrementInvoiceNumber();
+      saveInvoiceSuccess();
+    } else {
+      modifiedInvoiceSuccess();
     }
   };
 
-  // TODO: Change function name. (deleteInvoiceData maybe?)
   /**
-   * Delete an invoice from local storage based on the given index.
-   *
-   * @param {number} index - The index of the invoice to be deleted.
+   * Delete an invoice from the DB (if it has a persistedId) and from the
+   * localStorage cache. Falls back to cache-only for legacy invoices.
    */
-  const deleteInvoice = (index: number) => {
-    if (index >= 0 && index < savedInvoices.length) {
-      const updatedInvoices = [...savedInvoices];
-      updatedInvoices.splice(index, 1);
-      setSavedInvoices(updatedInvoices);
+  const deleteInvoice = (invoice: InvoiceType) => {
+    const persistedId = invoice.details.persistedId;
+    const invoiceNumber = invoice.details.invoiceNumber;
 
-      const updatedInvoicesJSON = JSON.stringify(updatedInvoices);
+    const updated = savedInvoices.filter(
+      (inv) => inv.details.invoiceNumber !== invoiceNumber
+    );
+    setSavedInvoices(updated);
+    localStorage.setItem(
+      LOCAL_STORAGE_SAVED_INVOICES_KEY,
+      JSON.stringify(updated)
+    );
 
-      localStorage.setItem(LOCAL_STORAGE_SAVED_INVOICES_KEY, updatedInvoicesJSON);
-    }
+    if (!persistedId) return;
+
+    void (async () => {
+      try {
+        const res = await apiFetch(`/api/invoices/${persistedId}`, {
+          method: "DELETE",
+        });
+        if (res.ok || res.status === 204) {
+          emitInvoicesChanged();
+        } else if (res.status === 422) {
+          // Server refused (only DRAFT invoices can be deleted) — surface why.
+          const body = await res.json().catch(() => null);
+          statusTransitionError(
+            body?.error ?? "Cette facture ne peut pas être supprimée."
+          );
+        } else if (res.status !== 401) {
+          saveInvoiceError();
+        }
+      } catch (err) {
+        if (!(err instanceof UnauthorizedError)) {
+          saveInvoiceError();
+        }
+      }
+    })();
   };
 
   /**
-   * Update the status of a saved invoice.
-   *
-   * @param {string} invoiceNumber - The invoice number to update.
-   * @param {string} status - The new status.
+   * Update the status of a saved invoice — DB + cache.
    */
   const updateInvoiceStatus = (
     invoiceNumber: string,
     status: InvoiceType["details"]["status"]
   ) => {
+    const target = savedInvoices.find(
+      (inv) => inv.details.invoiceNumber === invoiceNumber
+    );
     const updatedInvoices = savedInvoices.map((inv) =>
       inv.details.invoiceNumber === invoiceNumber
         ? { ...inv, details: { ...inv.details, status } }
         : inv
     );
     setSavedInvoices(updatedInvoices);
-    localStorage.setItem(LOCAL_STORAGE_SAVED_INVOICES_KEY, JSON.stringify(updatedInvoices));
+    localStorage.setItem(
+      LOCAL_STORAGE_SAVED_INVOICES_KEY,
+      JSON.stringify(updatedInvoices)
+    );
+
+    const persistedId = target?.details.persistedId;
+    if (!persistedId || !status) return;
+
+    void (async () => {
+      try {
+        const res = await apiFetch(`/api/invoices/${persistedId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: status.toUpperCase() }),
+        });
+        if (res.ok) {
+          emitInvoicesChanged();
+        } else if (res.status === 422) {
+          const body = await res.json().catch(() => null);
+          statusTransitionError(
+            body?.error ?? "Transition de statut non autorisée."
+          );
+        } else if (res.status !== 401) {
+          saveInvoiceError();
+        }
+      } catch (err) {
+        if (!(err instanceof UnauthorizedError)) {
+          saveInvoiceError();
+        }
+      }
+    })();
   };
 
   /**
@@ -461,6 +577,8 @@ export const InvoiceContextProvider = ({
     duplicated.details.updatedAt = undefined;
     duplicated.details.invoiceLogo = "";
     duplicated.details.signature = { data: "" };
+    // Duplicates are new rows — the original DB id must not carry over.
+    duplicated.details.persistedId = "";
 
     reset(duplicated);
     setInvoicePdf(new Blob());

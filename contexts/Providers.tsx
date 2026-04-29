@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
 // RHF
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
 
 // Zod
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,7 +17,7 @@ import { InvoiceSchema } from "@/lib/schemas";
 // Context
 import { ThemeProvider } from "@/contexts/ThemeProvider";
 import { TranslationProvider } from "@/contexts/TranslationContext";
-import { ProfileContextProvider } from "@/contexts/ProfileContext";
+import { ProfileContextProvider, useProfileContext } from "@/contexts/ProfileContext";
 import { InvoiceContextProvider } from "@/contexts/InvoiceContext";
 import { ChargesContextProvider } from "@/contexts/ChargesContext";
 
@@ -124,13 +124,46 @@ type ProvidersProps = {
   children: React.ReactNode;
 };
 
+/**
+ * Lives inside FormProvider + ProfileContext. Re-initializes the form once
+ * the DB profile arrives, but only when the form is still pristine and there
+ * is no saved draft — never overwrites in-progress user edits.
+ */
+const FormHydrator = () => {
+  const { reset, formState } = useFormContext<InvoiceType>();
+  const { profile, profileLoaded } = useProfileContext();
+  const hasHydratedFromDbRef = useRef(false);
+
+  useEffect(() => {
+    if (!profileLoaded || hasHydratedFromDbRef.current) return;
+    if (formState.isDirty) {
+      hasHydratedFromDbRef.current = true; // user is editing; don't touch
+      return;
+    }
+    if (typeof window !== "undefined") {
+      const hasDraft = !!window.localStorage.getItem(
+        LOCAL_STORAGE_INVOICE_DRAFT_KEY
+      );
+      if (hasDraft) {
+        hasHydratedFromDbRef.current = true;
+        return;
+      }
+    }
+    reset(buildDefaultsFromProfile(profile), { keepDefaultValues: false });
+    hasHydratedFromDbRef.current = true;
+  }, [profileLoaded, profile, reset, formState.isDirty]);
+
+  return null;
+};
+
 const Providers = ({ children }: ProvidersProps) => {
   const form = useForm<InvoiceType>({
     resolver: zodResolver(InvoiceSchema),
     defaultValues: FORM_DEFAULT_VALUES,
   });
 
-  // Hydrate once on mount: use saved draft, or fall back to profile defaults
+  // Hydrate once on mount: use saved draft, or fall back to local profile.
+  // The DB profile (if newer) is applied later by <FormHydrator />.
   useEffect(() => {
     const draft = readDraftFromLocalStorage();
     if (draft) {
@@ -156,6 +189,7 @@ const Providers = ({ children }: ProvidersProps) => {
       <TranslationProvider>
         <ProfileContextProvider>
           <FormProvider {...form}>
+            <FormHydrator />
             <InvoiceContextProvider>
               <ChargesContextProvider>{children}</ChargesContextProvider>
             </InvoiceContextProvider>

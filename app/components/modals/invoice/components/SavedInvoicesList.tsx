@@ -151,7 +151,7 @@ const SavedInvoicesList = ({ setModalState }: SavedInvoicesListProps) => {
                                     size="sm"
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        deleteInvoice(idx);
+                                        deleteInvoice(invoice);
                                     }}
                                 >
                                     Delete

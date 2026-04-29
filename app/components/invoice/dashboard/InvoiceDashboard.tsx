@@ -4,8 +4,9 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { useInvoiceContext } from "@/contexts/InvoiceContext";
-import { Plus } from "lucide-react";
+import { Plus, RefreshCcw } from "lucide-react";
+
+import { useInvoices } from "@/hooks/useInvoices";
 
 import InvoiceStatsBar from "./InvoiceStatsBar";
 import InvoiceFilters, {
@@ -16,10 +17,8 @@ import InvoiceFilters, {
 } from "./InvoiceFilters";
 import InvoiceTable from "./InvoiceTable";
 
-import type { InvoiceType } from "@/types";
-
 const InvoiceDashboard = () => {
-    const { savedInvoices } = useInvoiceContext();
+    const { invoices: savedInvoices, loading, offline, refetch } = useInvoices();
 
     // Filter & sort state
     const [search, setSearch] = useState("");
@@ -108,13 +107,29 @@ const InvoiceDashboard = () => {
                         Gerez et retrouvez toutes vos factures
                     </p>
                 </div>
-                <Link href="/">
-                    <Button>
-                        <Plus className="h-4 w-4 mr-2" />
-                        Nouvelle facture
+                <div className="flex gap-2">
+                    <Button
+                        variant="outline"
+                        onClick={() => void refetch()}
+                        disabled={loading}
+                    >
+                        <RefreshCcw className="h-4 w-4 mr-2" />
+                        Actualiser
                     </Button>
-                </Link>
+                    <Link href="/">
+                        <Button>
+                            <Plus className="h-4 w-4 mr-2" />
+                            Nouvelle facture
+                        </Button>
+                    </Link>
+                </div>
             </div>
+
+            {offline && (
+                <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded px-3 py-2">
+                    Mode hors-ligne : connectez-vous pour synchroniser vos factures.
+                </p>
+            )}
 
             {/* Stats */}
             <InvoiceStatsBar invoices={savedInvoices} />

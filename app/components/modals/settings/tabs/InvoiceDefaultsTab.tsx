@@ -16,6 +16,7 @@ import {
 
 import { useProfileContext } from "@/contexts/ProfileContext";
 import { useTranslationContext } from "@/contexts/TranslationContext";
+import SaveStatePill from "../SaveStatePill";
 
 import useCurrencies from "@/hooks/useCurrencies";
 
@@ -24,7 +25,7 @@ import { toast } from "@/components/ui/use-toast";
 import type { InvoiceDefaultsType } from "@/types";
 
 const InvoiceDefaultsTab = () => {
-    const { profile, updateInvoiceDefaults } = useProfileContext();
+    const { profile, updateInvoiceDefaults, saveState } = useProfileContext();
     const { _t } = useTranslationContext();
     const { currencies } = useCurrencies();
 
@@ -246,9 +247,12 @@ const InvoiceDefaultsTab = () => {
                 </div>
             </div>
 
-            <Button onClick={handleSave} className="w-full">
-                {_t("settings.save")}
-            </Button>
+            <div className="flex flex-col items-center gap-1">
+                <Button onClick={handleSave} className="w-full">
+                    {_t("settings.save")}
+                </Button>
+                <SaveStatePill state={saveState.invoiceDefaults} />
+            </div>
         </div>
     );
 };

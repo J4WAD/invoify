@@ -203,6 +203,8 @@ const InvoiceDetailsSchema = z.object({
         .optional(),
     /** Set server-side on finalize — not editable by user after issuance */
     referencesInvoiceNumber: fieldValidators.stringOptional,
+    /** DB row id once the invoice has been persisted via /api/invoices */
+    persistedId: fieldValidators.stringOptional,
 });
 
 const InvoiceSchema = z.object({

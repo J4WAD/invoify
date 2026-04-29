@@ -193,6 +193,7 @@ export const FORM_DEFAULT_VALUES = {
     pdfTemplate: 1,
     taxRegime: "ASSUJETTI_TVA" as const,
     referencesInvoiceNumber: "",
+    persistedId: "",
   },
 };
 
